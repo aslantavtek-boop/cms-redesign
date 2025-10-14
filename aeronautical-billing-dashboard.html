@@ -678,9 +678,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #ffffff;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(20px);
             border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             max-width: 680px;
             width: 90%;
             max-height: 85vh;
@@ -708,7 +710,7 @@
         
         .abs-modal-header {
             padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid #e5e5e7;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
@@ -718,14 +720,14 @@
         .abs-modal-title {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             letter-spacing: -0.015em;
             margin: 0;
         }
         
         .abs-modal-close {
-            background: #f5f5f7;
-            border: none;
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             width: 32px;
             height: 32px;
             border-radius: 50%;
@@ -733,18 +735,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.2s ease;
+            transition: all 0.2s ease;
             flex-shrink: 0;
             font-size: 1.25rem;
-            color: #1d1d1f;
+            color: #e2e8f0;
         }
         
         .abs-modal-close:hover {
-            background: #e5e5e7;
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(255, 255, 255, 0.2);
         }
         
         .abs-modal-close:focus-visible {
-            outline: 2px solid #007AFF;
+            outline: 2px solid #06b6d4;
             outline-offset: 2px;
         }
         
@@ -765,14 +768,14 @@
         .abs-modal-section-title {
             font-size: 1rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin-bottom: 0.75rem;
             letter-spacing: -0.01em;
         }
         
         .abs-modal-section-content {
             font-size: 0.9375rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.6;
         }
         
@@ -787,7 +790,7 @@
             position: relative;
             margin-bottom: 0.5rem;
             font-size: 0.9375rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.6;
         }
         
@@ -800,13 +803,13 @@
         }
         
         .abs-modal-scenario {
-            background: #f5f5f7;
+            background: rgba(15, 23, 42, 0.4);
             padding: 1.25rem;
             border-radius: 12px;
             font-size: 0.9375rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.6;
-            border-left: 3px solid #007AFF;
+            border-left: 3px solid #06b6d4;
         }
         
         /* Extended modal sections for advanced modules */
@@ -827,7 +830,7 @@
             padding-left: 2.5rem;
             margin-bottom: 1rem;
             font-size: 0.9375rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.6;
         }
         
@@ -838,7 +841,7 @@
             top: 0;
             width: 28px;
             height: 28px;
-            background: linear-gradient(135deg, #007AFF, #5AC8FA);
+            background: linear-gradient(135deg, #06b6d4, #5AC8FA);
             color: white;
             font-weight: 600;
             font-size: 0.875rem;
@@ -849,10 +852,10 @@
         }
         
         .abs-alert-card {
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 1.25rem;
-            background: linear-gradient(135deg, rgba(14, 165, 233, 0.03), rgba(6, 182, 212, 0.03));
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(6, 182, 212, 0.1));
             margin-top: 1rem;
         }
         
@@ -868,7 +871,7 @@
         .abs-alert-headline {
             font-size: 1.0625rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin: 0;
         }
         
@@ -895,7 +898,7 @@
             position: relative;
             margin-bottom: 0.625rem;
             font-size: 0.875rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.6;
         }
         
