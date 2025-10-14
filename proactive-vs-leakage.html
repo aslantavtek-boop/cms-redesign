@@ -47,6 +47,43 @@
             color: #94a3b8;
             max-width: 800px;
             margin: 0 auto;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Navigation */
+        .header-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            color: #e2e8f0;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+        }
+        
+        .nav-link.active {
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+            color: #06b6d4;
         }
         
         /* Flow Arrow */
@@ -389,6 +426,16 @@
                 font-size: 1.75rem;
             }
             
+            .header-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            
             .card {
                 padding: 1rem;
             }
@@ -411,6 +458,11 @@
             <p class="page-subtitle">
                 Uçtan uca gelir bütünlüğü için tamamlayıcı iki katman: biri faturadan önce hatayı önler, diğeri sonra kaçan geliri bulur.
             </p>
+            <div class="header-nav">
+                <a href="prd.html" class="nav-link">📄 Product Requirements</a>
+                <a href="aeronautical-billing-dashboard.html" class="nav-link">📊 Business Flow Dashboard</a>
+                <a href="proactive-vs-leakage.html" class="nav-link active">⚡ Proactive vs. Leakage</a>
+            </div>
         </header>
 
         <!-- Flow Arrow Section -->
