@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeronautical Billing System - Executive Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            color: #1d1d1f;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #6e6e73;
+            font-size: 1.25rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+        }
+        
+        .header-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #1d1d1f;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            background: #007AFF;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #007AFF;
+            color: white;
+        }
+
+        .dashboard {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 4rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid #d2d2d7;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #6e6e73;
+            letter-spacing: -0.01em;
+        }
+
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .layer {
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .layer-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            color: #1d1d1f;
+            letter-spacing: -0.015em;
+        }
+
+        .layer-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .module-card {
+            background: #fbfbfd;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.28, 0.11, 0.32, 1);
+            border: 1px solid rgba(0,0,0,0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--layer-color);
+            opacity: 0;
+            transition: opacity 0.4s cubic-bezier(0.28, 0.11, 0.32, 1);
+        }
+
+        .module-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.08);
+        }
+
+        .module-card:hover::before {
+            opacity: 1;
+        }
+
+        .module-card:active {
+            transform: translateY(-2px);
+            transition-duration: 0.1s;
+        }
+        
+        .module-card.module-link {
+            cursor: pointer !important;
+        }
+        
+        .module-card.module-link:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+        }
+
+        .module-title {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+        }
+
+        .module-description {
+            font-size: 0.875rem;
+            color: #86868b;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: rgba(29, 29, 31, 0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #f5f5f7;
+            padding: 0.625rem 0.875rem;
+            border-radius: 6px;
+            font-size: 0.8125rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            font-weight: 400;
+            letter-spacing: -0.005em;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(29, 29, 31, 0.92);
+        }
+
+        .module-card:hover .tooltip {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+            transition-delay: 0.3s;
+        }
+
+        /* Layer-specific colors */
+        .operational {
+            --layer-color: #007AFF;
+            --layer-color-light: #5AC8FA;
+        }
+
+        .processing {
+            --layer-color: #5AC8FA;
+            --layer-color-light: #32D74B;
+        }
+
+        .financial {
+            --layer-color: #34C759;
+            --layer-color-light: #30D158;
+        }
+
+        .engagement {
+            --layer-color: #8E8E93;
+            --layer-color-light: #C7C7CC;
+        }
+
+        /* Flow arrows */
+        .flow-arrow {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto;
+            position: relative;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            50% {
+                transform: translateY(-3px);
+                opacity: 0.7;
+            }
+        }
+
+        .flow-arrow svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 1px 3px rgba(0,0,0,0.1));
+        }
+
+        .flow-line {
+            width: 2px;
+            height: 48px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(180deg, var(--layer-color) 0%, var(--next-layer-color) 100%);
+            border-radius: 1px;
+            position: relative;
+            opacity: 0.25;
+        }
+
+        .flow-line::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid var(--next-layer-color);
+            opacity: 0.5;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+
+            header {
+                margin-bottom: 3rem;
+                padding: 1rem 0;
+            }
+
+            h1 {
+                font-size: 2rem;
+                font-weight: 600;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .header-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .dashboard {
+                padding: 2rem 1.5rem;
+                border-radius: 16px;
+            }
+
+            .legend {
+                gap: 1.25rem;
+                margin-bottom: 3rem;
+                padding-bottom: 2rem;
+            }
+
+            .legend-item {
+                font-size: 0.8125rem;
+            }
+
+            .modules {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .layer {
+                margin-bottom: 3rem;
+            }
+
+            .layer-title {
+                font-size: 1.25rem;
+            }
+
+            .module-card {
+                padding: 1.5rem;
+            }
+
+            .flow-line {
+                height: 40px;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                font-size: 0.9375rem;
+            }
+
+            .dashboard {
+                padding: 1.5rem 1rem;
+            }
+
+            .legend {
+                gap: 1rem;
+                margin-bottom: 2.5rem;
+            }
+        }
+
+        /* Icon styles */
+        .layer-icon {
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aeronautical Billing System</h1>
+            <p class="subtitle">Executive Business Flow Dashboard</p>
+            <div class="header-nav">
+                <a href="prd.html" class="nav-link">📄 Product Requirements</a>
+                <a href="aeronautical-billing-dashboard.html" class="nav-link active">📊 Business Flow Dashboard</a>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #007AFF;"></div>
+                    <span>Operational Layer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #5AC8FA;"></div>
+                    <span>Processing & Intelligence</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #34C759;"></div>
+                    <span>Financial Layer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #8E8E93;"></div>
+                    <span>Engagement & Governance</span>
+                </div>
+            </div>
+
+            <!-- Operational Layer -->
+            <div class="layer operational">
+                <div class="layer-title">
+                    <div class="layer-badge" style="background: #007AFF;">
+                        <span class="layer-icon">📊</span>
+                    </div>
+                    <span>Operational Layer</span>
+                </div>
+                <div class="modules">
+                    <div class="module-card">
+                        <div class="module-title">AODB & Flight Data Input</div>
+                        <div class="module-description">Real-time airport operational database integration and flight information capture</div>
+                        <div class="tooltip">Captures live flight movements and operational data</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Service Management & Auto-Assign</div>
+                        <div class="module-description">Automated service allocation and resource assignment engine</div>
+                        <div class="tooltip">Intelligent service matching and assignment</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Mobile Service Forms</div>
+                        <div class="module-description">Field service data collection via mobile applications</div>
+                        <div class="tooltip">On-ground service documentation and validation</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-line" style="--layer-color: #007AFF; --next-layer-color: #5AC8FA;"></div>
+
+            <!-- Processing & Intelligence Layer -->
+            <div class="layer processing">
+                <div class="layer-title">
+                    <div class="layer-badge" style="background: #5AC8FA;">
+                        <span class="layer-icon">⚡</span>
+                    </div>
+                    <span>Processing & Intelligence Layer</span>
+                </div>
+                <div class="modules">
+                    <div class="module-card">
+                        <div class="module-title">Real-Time Rating & Bill-Ready</div>
+                        <div class="module-description">Instant charge calculation and invoice preparation</div>
+                        <div class="tooltip">Live billing computation and validation</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Tariff Management</div>
+                        <div class="module-description">Comprehensive pricing rules and rate card administration</div>
+                        <div class="tooltip">Dynamic pricing configuration and versioning</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Leakage Analytics</div>
+                        <div class="module-description">Revenue loss detection and recovery insights</div>
+                        <div class="tooltip">Identifies unbilled services and revenue gaps</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Campaign & Incentive Engine</div>
+                        <div class="module-description">Promotional programs and discount management</div>
+                        <div class="tooltip">Automated incentive application and tracking</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Machine Learning Tariff Recommendation</div>
+                        <div class="module-description">AI-powered pricing optimization and suggestions</div>
+                        <div class="tooltip">Predictive analytics for optimal pricing strategies</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-line" style="--layer-color: #5AC8FA; --next-layer-color: #34C759;"></div>
+
+            <!-- Financial Layer -->
+            <div class="layer financial">
+                <div class="layer-title">
+                    <div class="layer-badge" style="background: #34C759;">
+                        <span class="layer-icon">💰</span>
+                    </div>
+                    <span>Financial Layer</span>
+                </div>
+                <div class="modules">
+                    <div class="module-card">
+                        <div class="module-title">IATA ACIC & SIS Integration</div>
+                        <div class="module-description">Industry-standard billing format and settlement system connectivity</div>
+                        <div class="tooltip">Standardized aviation billing and clearing</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Simulation & Forecasting</div>
+                        <div class="module-description">Revenue projection and scenario modeling</div>
+                        <div class="tooltip">Financial planning and impact analysis</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Revenue Integrity & Data Locking</div>
+                        <div class="module-description">Financial control and audit trail protection</div>
+                        <div class="tooltip">Ensures data immutability and compliance</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-line" style="--layer-color: #34C759; --next-layer-color: #8E8E93;"></div>
+
+            <!-- Engagement & Governance Layer -->
+            <div class="layer engagement">
+                <div class="layer-title">
+                    <div class="layer-badge" style="background: #8E8E93;">
+                        <span class="layer-icon">🌐</span>
+                    </div>
+                    <span>Engagement & Governance Layer</span>
+                </div>
+                <div class="modules">
+                    <div class="module-card">
+                        <div class="module-title">Web Portal & Self-Service</div>
+                        <div class="module-description">Customer-facing interface for billing management</div>
+                        <div class="tooltip">Empowers airlines with transparent billing access</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">API-First Ecosystem</div>
+                        <div class="module-description">RESTful integration layer for external systems</div>
+                        <div class="tooltip">Seamless third-party system connectivity</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Proactive Alerts</div>
+                        <div class="module-description">Intelligent notification and exception management</div>
+                        <div class="tooltip">Real-time monitoring and stakeholder updates</div>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-title">Audit Management</div>
+                        <div class="module-description">Comprehensive compliance tracking and reporting</div>
+                        <div class="tooltip">Full transparency and regulatory compliance</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-arrow">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#007AFF;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#5AC8FA;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#34C759;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="url(#arrowGradient)" opacity="0.1"/>
+                    <path d="M50 20 L50 65 M35 50 L50 65 L65 50" stroke="url(#arrowGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Apple-style subtle interactions
+        document.querySelectorAll('.module-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Subtle click feedback
+                this.style.transform = 'scale(0.97) translateY(-4px)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
+            });
+        });
+
+        // Smooth fade-in on load
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+    </script>
+
+    <!-- Modal System Styles -->
+    <style>
+        .module-link {
+            cursor: pointer !important;
+            position: relative;
+            transition: opacity 0.2s ease;
+            pointer-events: auto !important;
+        }
+        
+        .module-link * {
+            pointer-events: none;
+        }
+        
+        .module-link:hover {
+            opacity: 0.7;
+        }
+        
+        .module-link:active {
+            opacity: 0.85;
+            transform: scale(0.99);
+        }
+        
+        .module-link:focus-visible {
+            outline: 2px solid #007AFF;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+        
+        .abs-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 9998;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .abs-modal-overlay.active {
+            display: block;
+        }
+        
+        .abs-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 680px;
+            width: 90%;
+            max-height: 85vh;
+            overflow: hidden;
+            z-index: 9999;
+            display: none;
+            animation: modalSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .abs-modal.active {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+        
+        .abs-modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #e5e5e7;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .abs-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            letter-spacing: -0.015em;
+            margin: 0;
+        }
+        
+        .abs-modal-close {
+            background: #f5f5f7;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+            flex-shrink: 0;
+            font-size: 1.25rem;
+            color: #1d1d1f;
+        }
+        
+        .abs-modal-close:hover {
+            background: #e5e5e7;
+        }
+        
+        .abs-modal-close:focus-visible {
+            outline: 2px solid #007AFF;
+            outline-offset: 2px;
+        }
+        
+        .abs-modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .abs-modal-section {
+            margin-bottom: 2rem;
+        }
+        
+        .abs-modal-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .abs-modal-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+        
+        .abs-modal-section-content {
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        
+        .abs-modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .abs-modal-list li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        
+        .abs-modal-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #34C759;
+            font-weight: 600;
+        }
+        
+        .abs-modal-scenario {
+            background: #f5f5f7;
+            padding: 1.25rem;
+            border-radius: 12px;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.6;
+            border-left: 3px solid #007AFF;
+        }
+        
+        /* Extended modal sections for advanced modules */
+        .abs-how-section {
+            margin-top: 2rem;
+        }
+        
+        .abs-how-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            counter-reset: how-counter;
+        }
+        
+        .abs-how-list li {
+            counter-increment: how-counter;
+            position: relative;
+            padding-left: 2.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        
+        .abs-how-list li::before {
+            content: counter(how-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #007AFF, #5AC8FA);
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .abs-alert-card {
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.03), rgba(6, 182, 212, 0.03));
+            margin-top: 1rem;
+        }
+        
+        .abs-alert-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .abs-alert-headline {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0;
+        }
+        
+        .abs-confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            color: white;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+        }
+        
+        .abs-reasons-list {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0;
+        }
+        
+        .abs-reasons-list li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.625rem;
+            font-size: 0.875rem;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+        
+        .abs-reasons-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #0ea5e9;
+            font-weight: 600;
+        }
+        
+        .abs-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .abs-actions .btn {
+            padding: 0.625rem 1rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .abs-actions .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+        }
+        
+        .abs-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+        }
+        
+        .abs-actions .btn-secondary {
+            background: rgba(0, 0, 0, 0.04);
+            color: #1d1d1f;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .abs-actions .btn-secondary:hover {
+            background: rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Additional modal list styles */
+        .abs-alert-types-list,
+        .abs-auto-actions-list,
+        .abs-governance-rules-list,
+        .abs-business-impact-list,
+        .abs-triggers-list,
+        .abs-capabilities-list,
+        .abs-controls-list,
+        .abs-validations-list,
+        .abs-assumptions-list,
+        .abs-outputs-list,
+        .abs-use-cases-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Case Card for ADB Scenario (Proactive Alerts) */
+        .abs-case-card {
+            background: linear-gradient(135deg, rgba(142, 142, 147, 0.06), rgba(174, 174, 178, 0.06));
+            border-left: 4px solid #8E8E93;
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            color: #1d1d1f;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Alert Types List */
+        .abs-alert-types-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.875rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.8;
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.03), rgba(255, 159, 10, 0.03));
+            padding: 1rem 1rem 1rem 1rem;
+            border-radius: 10px;
+            border-left: 3px solid #FF9500;
+        }
+        
+        .abs-triggers-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(255, 149, 0, 0.04), rgba(255, 204, 0, 0.04));
+            padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+            border-radius: 8px;
+            border-left: 3px solid #FF9500;
+        }
+        
+        .abs-triggers-list li::before {
+            content: "▶";
+            position: absolute;
+            left: 0.75rem;
+            color: #FF9500;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .abs-capabilities-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.875rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.03), rgba(90, 200, 250, 0.03));
+            padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+            border-radius: 8px;
+            border-left: 3px solid #007AFF;
+        }
+        
+        .abs-capabilities-list li::before {
+            content: "⚡";
+            position: absolute;
+            left: 0.875rem;
+            color: #007AFF;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        
+        .abs-controls-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(88, 86, 214, 0.04), rgba(94, 92, 230, 0.04));
+            padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+            border-radius: 8px;
+            border-left: 3px solid #5856D6;
+        }
+        
+        .abs-controls-list li::before {
+            content: "⚙";
+            position: absolute;
+            left: 0.75rem;
+            color: #5856D6;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .abs-validations-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.03), rgba(255, 69, 58, 0.03));
+            padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+            border-radius: 8px;
+            border-left: 3px solid #FF3B30;
+        }
+        
+        .abs-validations-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0.75rem;
+            color: #FF3B30;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .abs-assumptions-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: rgba(142, 142, 147, 0.05);
+            padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+            border-radius: 8px;
+        }
+        
+        .abs-assumptions-list li::before {
+            content: "ⓘ";
+            position: absolute;
+            left: 0.75rem;
+            color: #8E8E93;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .abs-outputs-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.03), rgba(48, 209, 88, 0.03));
+            padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+            border-radius: 8px;
+            border-left: 3px solid #34C759;
+        }
+        
+        .abs-outputs-list li::before {
+            content: "📊";
+            position: absolute;
+            left: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .abs-use-cases-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.875rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(90, 200, 250, 0.05), rgba(52, 199, 89, 0.05));
+            padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+            border-radius: 8px;
+            border-left: 3px solid #5AC8FA;
+        }
+        
+        .abs-use-cases-list li::before {
+            content: "💡";
+            position: absolute;
+            left: 0.875rem;
+            font-size: 1rem;
+        }
+        
+        /* Auto Actions List */
+        .abs-auto-actions-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.875rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.04), rgba(255, 214, 10, 0.04));
+            padding: 0.875rem 0.875rem 0.875rem 1rem;
+            border-radius: 10px;
+            border-left: 3px solid #FFCC00;
+        }
+        
+        /* Governance Rules List */
+        .abs-governance-rules-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: rgba(174, 174, 178, 0.05);
+            padding: 0.75rem 0.75rem 0.75rem 2.25rem;
+            border-radius: 8px;
+        }
+        
+        .abs-governance-rules-list li::before {
+            content: "⚖";
+            position: absolute;
+            left: 0.75rem;
+            color: #8E8E93;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        /* Business Impact List (green badges with 💹) */
+        .abs-business-impact-list li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.875rem;
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            background: linear-gradient(135deg, rgba(48, 209, 88, 0.06), rgba(52, 199, 89, 0.06));
+            padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #34C759;
+            font-weight: 500;
+        }
+        
+        .abs-business-impact-list li::before {
+            content: "💹";
+            position: absolute;
+            left: 0.875rem;
+            font-size: 1.125rem;
+        }
+        
+        @media (max-width: 768px) {
+            .abs-modal {
+                max-width: 95%;
+                max-height: 90vh;
+            }
+            
+            .abs-modal-header {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+            
+            .abs-modal-title {
+                font-size: 1.25rem;
+            }
+            
+            .abs-modal-body {
+                padding: 1.5rem;
+            }
+            
+            .abs-how-list li,
+            .abs-alert-types-list li,
+            .abs-auto-actions-list li,
+            .abs-governance-rules-list li,
+            .abs-business-impact-list li,
+            .abs-triggers-list li,
+            .abs-capabilities-list li,
+            .abs-controls-list li,
+            .abs-validations-list li,
+            .abs-assumptions-list li,
+            .abs-outputs-list li,
+            .abs-use-cases-list li {
+                padding-left: 2rem;
+                font-size: 0.875rem;
+                padding: 0.625rem 0.625rem 0.625rem 2rem;
+            }
+            
+            .abs-how-list li::before,
+            .abs-triggers-list li::before,
+            .abs-capabilities-list li::before,
+            .abs-controls-list li::before,
+            .abs-validations-list li::before,
+            .abs-governance-rules-list li::before,
+            .abs-business-impact-list li::before {
+                font-size: 0.875rem;
+            }
+            
+            .abs-case-card {
+                padding: 1rem;
+                font-size: 0.875rem;
+            }
+            
+            .abs-alert-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .abs-actions {
+                flex-direction: column;
+            }
+            
+            .abs-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+
+    <!-- Modal Data -->
+    <script type="application/json" id="abs-module-data">
+    {
+      "AODB & Flight Data Input": {
+        "title": "AODB & Flight Data Input",
+        "desc": "Sistem, AODB üzerinden gelen uçuş planı, iniş–kalkış zamanı, uçak tipi, rota ve terminal bilgilerini otomatik alır. Bu bilgiler tüm gelir hesaplamalarının temelini oluşturur.",
+        "value": ["Doğru faturalama için tek doğruluk kaynağı.", "Manuel giriş hataları ortadan kalkar.", "Operasyon verisi anında sisteme yansır."],
+        "scenario": "ADB'de TK2321 seferi 20 dk rötar alır. AODB güncellemesi sisteme düşer; park süresi yeniden hesaplanır, faturalama hatasız ilerler."
+      },
+      "Service Management & Auto-Assign": {
+        "title": "Service Management & Auto-Assign",
+        "desc": "Uçuş oluştuğunda tanımlı kurallara göre gerekli hizmetler (pushback, GPU, temizlik, otobüs vb.) otomatik atanır. Kullanıcı gerekirse ekleme/çıkarma yapabilir.",
+        "value": ["Eksiksiz ve hızlı hizmet ataması.", "Operasyon verimliliği artar.", "Faturalama gecikmeleri azalır."],
+        "scenario": "ADB'de XQ9412 uçuşu eklendiğinde 'intl departure narrow-body' profiline göre pushback, GPU ve temizlik otomatik atanır; ekip onaylar ve süreç başlar."
+      },
+      "Mobile Service Forms": {
+        "title": "Mobile Service Forms",
+        "desc": "Saha ekipleri mobil cihazlarından hizmet detaylarını (süre, miktar, imza, foto) girer; hizmet biter bitmez veri sisteme düşer ve faturalamaya hazır olur.",
+        "value": ["Kağıtsız, gerçek zamanlı operasyon.", "Veri kaybı engellenir.", "Saha personeli için hız ve şeffaflık."],
+        "scenario": "ADB'de bir A321 için GPU hizmeti biter; ekip mobilde 28 dk girer. Kayıt anında görünür ve 'bill-ready' satırı üretir."
+      },
+      "Real-Time Rating & Bill-Ready": {
+        "title": "Real-Time Rating & Bill-Ready",
+        "desc": "Uçuş ve hizmet verileri sisteme düştüğü anda, ilgili tarife kurallarını uygulayarak anlık ücret hesaplaması yapar. Henüz fatura kesilmeden, bütün kalemler 'bill-ready' statüsünde görünür. Böylece finans ekipleri dönem sonunu beklemeden gerçekleşen geliri görebilir; operasyon sahasındaki değişiklikler (zaman, MTOW, hizmet tamamlanması) sistem tarafından dakikalar içinde güncellenir. Modül, çakışan verilerde akıllı önceliklendirme (son doğrulanmış kayıt), tolerans ve yuvarlama kurallarıyla iş tutarlılığını korur.",
+        "value": [
+          "Anlık gelir görünürlüğü ve günlük tahakkuk şeffaflığı.",
+          "Mali kapanış sürelerinde hissedilir kısalma.",
+          "Manuel hesap/aktarımı azaltarak hata riskini düşürür.",
+          "Operasyonda değişiklik olduğunda satırlar otomatik güncellenir."
+        ],
+        "scenario": "ADB'de PC2038 iniş yapar. Sistem on-block saatine göre park süresini hesaplar, dar gövde park tarifesini uygular ve 75 dakikalık 'bill-ready' satırı oluşturur. 14:10'da hizmet formlarından GPU tamamlanması girilince ikinci bir satır otomatik eklenir. 14:18'de MTOW değeri güncellenirse park tutarı da anında yeniden hesaplanır. Henüz fatura kesilmeden gün içi gelir raporunda bu iki kalem görünür.",
+        "triggers": [
+          "Uçuş zamanları: on-block / off-block / actual arrival–departure güncellemeleri.",
+          "Hizmet olayları: hizmet başlangıç–bitiş, miktar/süre doğrulaması.",
+          "Kritik alanlar: MTOW, aircraft type, terminal/stand, domestic/international bayrağı.",
+          "Tarife değişikliği: geçerlilik tarihi gelen yeni sürümün devreye girmesi."
+        ],
+        "capabilities": [
+          "Anlık hesaplama ve otomatik yeniden fiyatlama (re-rating).",
+          "Çok bileşenli ücret: iniş, park, pax, hizmet ve opsiyonel ekler.",
+          "Versiyonlu tarife uygulaması: doğru döneme doğru kural.",
+          "Muafiyet ve kampanya bayraklarını hesaba katma (overlap yönetimi).",
+          "Ön izleme: satır bazında 'nasıl hesaplandı?' açıklaması."
+        ],
+        "controls": [
+          "Tolerans & yuvarlama: dakika, miktar ve para birimi yuvarlama politikaları.",
+          "Öncelik matrisi: aynı alan farklı kaynaklardan gelirse 'en güvenilir/son doğrulanan' seçilir.",
+          "Çakışma uyarısı: sıra dışı değerlerde 'review required' etiketi.",
+          "Yetkili 'freeze line' seçeneği: belirli satırlar fatura öncesi kilitlenebilir."
+        ],
+        "validations": [
+          "Zaman mantığı: off-block < on-block ise uyar.",
+          "Uçak tipi–MTOW uyumsuzluğunda inceleme kuyruğu.",
+          "Tarife kapsamı dışında kalan kombinasyonlarda kullanıcıya kural önerisi.",
+          "Tekrarlanan hizmet satırı için yineleme kontrolü."
+        ],
+        "outputs": [
+          "Bill-ready satırları: hizmet/kalem, dönem, miktar/süre, birim fiyat, indirim/muafiyet, vergi, toplam.",
+          "Açıklama izi ('explainability'): uygulanan tarife kuralı ve parametre özeti.",
+          "Gün içi gelir panosu: hat/taşıyıcı/kalem kırılımlı anlık tahakkuk."
+        ],
+        "use_cases": [
+          "Gün sonu yerine gün içi gelir takibi; finans direktörü anlık tabloyu görür.",
+          "Operasyon değişikliği sonrası anında yeniden fiyatlama (re-rating).",
+          "Kampanya etkisinin satır düzeyinde görünmesi (teşvik/indirim önizlemesi).",
+          "Muhasebe mutabakatında 'nasıl hesaplandı?' izinin paylaşılması."
+        ]
+      },
+      "Tariff Management": {
+        "title": "Tariff Management",
+        "desc": "Tarifeler; versiyonlu, tarih bazlı ve tamamen konfigürasyon üzerinden yönetilir. Dinamik Tarife Tanım Ekranı ile kullanıcılar kural ve formülleri geliştirici müdahalesi olmadan tanımlar: 'Natural Language' (doğal dil) alanında, örn. '01.03.2026'dan itibaren, 06:00–10:00 arası INTL dar gövde park ücreti +%8' gibi kurallar yazılabilir. Her kural, anlık simülasyon ile test edilir (etkiyi, istisnaları, gelir farkını gösterir). Farklı havalimanları farklı formüller (MTOW adımları, zaman bantları, noise/emisyon sınıfı, apron/stand tipi, yolcu bazlı bileşen) kullanabilir; hepsi UI'dan tanımlanabilir, yayınlanmadan önce önizlenir ve onaylanır.",
+        "value": ["Konfigürasyonla yönetim: geliştirme gerektirmeden esnek tarife kurgusu.", "Natural language kural yazımıyla hız ve erişilebilirlik.", "Anlık simülasyon ve önizleme ile hatasız yayın ve güçlü yönetişim."],
+        "scenario": "ADB'de park tarifesi 1 Mart için güncellenir. Dinamik ekran üzerinden '01.03'ten itibaren INTL park +%6, dar gövde sabit ücret +₺50' kuralı doğal dille yazılır; sistem otomatik formüle çevirip simüle eder. 28 Şubat uçuşları eski tarifeden, 1 Mart sonrası yeni tarifeden hesaplanır; etki raporu ve fark analizi yayın öncesi görülür."
+      },
+      "Leakage Analytics": {
+        "title": "Leakage Analytics",
+        "desc": "Sisteme girilmiş kayıtlarla, benzer uçuşların davranışlarını karşılaştırarak 'muhtemelen atlanmış' hizmetleri akıllıca işaretler. Dış sensör ya da entegrasyon olmadan, sadece mevcut veriye dayanarak 'benzer uçuşlarda genellikle şu hizmet vardır, burada yok' gibi mantıksal kanıtlarla uyarı üretir.",
+        "value": [
+          "Proaktif gelir koruma: atlanan hizmetleri anında yakalama.",
+          "Denetim yükünü azaltır; ekipler kanıtlı aksiyon alır.",
+          "Öğrenen yapı ile yanlış alarmları hızla düşürür."
+        ],
+        "scenario": "ADB'de bir Pegasus A320 uçağı 22:30'da park eder. Geçmiş 50 benzer uçuşun 49'unda yakıt hizmeti kaydı vardır. Bu uçuşta yoktur. Park süresi 60+ dk ve temizlik/GPU kayıtları var. Sistem 'yüksek olasılıkla atlanmış yakıt' uyarısı üretir ve tahmini gelir kaybını gösterir.",
+        "how": [
+          "Benzer Uçuş Karşılaştırması: aynı havayolu, uçak tipi, rota/zaman/stand profiline bakar; benzerlerin %95'inde hizmet varsa ama burada yoksa işaretler.",
+          "Operasyon Zinciri Mantığı: tipik sıra (temizlik → catering → GPU → yakıt) içinde 'yakıt' yoksa anomali puanı artar.",
+          "Tarihsel Davranış: belirli taşıyıcı/tip kombinasyonunda hizmet girilme oranını öğrenir; beklenen davranış sapınca sinyal üretir.",
+          "Park Süresi Kontrolü: park süresi uzun ama hizmet yoksa 'işlem eksikliği' sinyali verir.",
+          "Sinyal Birleşimi: tek bir göstergeden değil, birden fazla zayıf sinyalin toplamından karar verir."
+        ],
+        "sample_alert": {
+          "headline": "Unbilled Fuel Service — High Confidence",
+          "confidence": 0.89,
+          "reasons": [
+            "Benzer 50 uçuşun 49'unda yakıt hizmeti vardı",
+            "Park süresi: 62 dk (tipik eşik: 45 dk+)",
+            "Temizlik ve GPU kayıtları mevcut, yakıt kaydı yok"
+          ],
+          "cta_primary": "Hizmet Satırı Oluştur",
+          "cta_secondary": "Yanlış Alarm (Öğret)"
+        }
+      },
+      "Campaign & Incentive Engine": {
+        "title": "Campaign & Incentive Engine",
+        "desc": "Performans kriterlerine göre (yeni rota, Y/Y artış, gecikme azalımı) otomatik teşvik/indirim uygular; retro-düzeltmeleri üretir.",
+        "value": ["Şeffaf ve ölçülebilir kampanyalar.", "Havayollarıyla iş birliği güçlenir.", "Manuel kampanya yönetimi ortadan kalkar."],
+        "scenario": "ADB'de İzmir–Berlin hattı için %5 teşvik tanımlanır; eşik aşılınca sistem indirimi otomatik uygular."
+      },
+      "Machine Learning Tariff Recommendation": {
+        "title": "Machine Learning Tariff Recommendation",
+        "desc": "Geçmiş faturalama ve davranış verilerinden yola çıkarak optimal tarife veya indirim önerileri sunar.",
+        "value": ["Gelir optimizasyonu.", "Veriyle yönetilen rekabet.", "Dinamik fiyatlandırma desteği."],
+        "scenario": "ADB'de sabah saatlerinde belirli taşıyıcının trafik artışını tespit eder; bu saatlere 'off-peak discount' önerir."
+      },
+      "IATA ACIC & SIS Integration": {
+        "title": "IATA ACIC & SIS Integration",
+        "desc": "IATA standartlarıyla uyumlu oran doğrulama ve e-fatura (SIS) üretimi; uluslararası geçerlilik ve hız sağlar.",
+        "value": ["Regülasyon uyumu.", "Hata oranı düşer.", "Finans süreçleri hızlanır."],
+        "scenario": "ADB'de THY'ye kesilen fatura IATA SIS formatında oluşturulur ve direkt gönderilir."
+      },
+      "Simulation & Forecasting": {
+        "title": "Simulation & Forecasting",
+        "desc": "Karar destek için 'ne olursa' senaryolarını çalıştırır ve gelir/nakit akışı tahminlerini üretir. Kullanıcı; rota ekleme, frekans değişikliği, MTOW/pax profili, tarife/indirim ve mevsimsellik gibi değişkenlerle oynamayıp sonucu doğrudan görür. Sonuçlar; gelir etkisi, kârlılık (ROI) ve nakit akışı fazlaması olarak net şekilde sunulur.",
+        "value": [
+          "Stratejik planlama gücü: yeni rota, frekans ve kapasite kararlarını veriyle alırsınız.",
+          "İsabetli gelir projeksiyonu: mevsimsellik ve talep profilleri dikkate alınır.",
+          "Risk analizi ve dayanıklılık: iyi/orta/kötü senaryolarla stres testi yapılır."
+        ],
+        "scenario": "ADB'de yaz dönemi için 'İzmir–Amsterdam' hattı eklenmesi test edilir. Girdi olarak; haftalık 5 frekans, ortalama load factor %82, A320 dar gövde, MTOW 73t; kampanya olarak ilk 3 ay %3 teşvik; tarife ise 1 Mart'ta %6 artış varsayılır. Simülasyon sonucu: toplam dönem geliri +%12 artış; ilk 90 günde nakit girişleri pik yapar; ROI %18, başabaş (payback) 7. ayda beklenir. Kötümser senaryoda (load factor −5 puan ve 2 frekans iptali), gelir artışı +%6'ya geriler ve payback 10. aya kayar.",
+        "capabilities": [
+          "What-if Senaryo Oluşturucu: rota açılışı, frekans/slot değişimi, uçak tipi/MTOW, pax profili, kampanya/indirim, tarife güncellemesi, muafiyet ve SLA etkileri.",
+          "ROI Simülatörü: kampanyanın maliyetini, havayoluna sağlanan avantajı ve havalimanına net katkıyı yan yana gösterir.",
+          "Zaman Serisi Tahmini: mevsimsellik (yaz/kış), tatil dönemleri ve geçmiş trendlere dayalı aylık/haftalık gelir & nakit akışı projeksiyonları.",
+          "Stres Testi (Good/Base/Bad): talep, frekans, gecikme/iptal, tarifedeki geriye dönük düzeltmeler gibi parametrelerle dayanıklılık analizi.",
+          "Hassasiyet Analizi: yük faktörü, MTOW, ücret bileşenleri ve indirim yüzdeleri için '+/−' etkilerini anında gösterir.",
+          "Retro-Adjustment Etkisi: dönem sonunda tarife değişirse geriye dönük farkların nakit ve gelir zamanlamasına etkisi."
+        ],
+        "assumptions": [
+          "Talep ve frekans varsayımları kullanıcı tarafından sağlanır veya geçmiş trende göre otomatik önerilir.",
+          "Tarife ve kampanya kuralları Tariff Management'taki yayınlanmış sürümlerden çekilir.",
+          "Uçuş iptali/gecikmesi oranları geçmiş dönem ortalamasına göre varsayılır (kullanıcı güncelleyebilir)."
+        ],
+        "outputs": [
+          "Gelir Etkisi Özeti: toplam/hat bazında gelir farkı, satır kalemlerine (iniş/park/pax/hizmet) ayrışım.",
+          "Nakit Akışı Eğrisi: aylık/haftalık tahsilat profili ve kampanya maliyet zamanlaması.",
+          "ROI & Payback: dönem kârlılığı, geri dönüş süresi, Net Etki (kampanya sonrası).",
+          "Senaryo Kıyaslama: Base vs. Good vs. Bad yan yana tablo/grafik; karar notu.",
+          "Assumption Sheet: kullanılan varsayımlar listesi, gerektiğinde tek tıkla paylaşılabilir."
+        ],
+        "use_cases": [
+          "Yeni rota/frekans kararı: 'A320 ile haftada +3 frekans eklersek gelir ve ROI ne olur?'",
+          "Tarife artışı etkisi: '1 Mart'ta park ücretine %6 zam yaparsak yıl sonu nakit akışına etkisi nedir?'",
+          "Kampanya tasarımı: 'İlk 3 ay %3 indirim verelim; trafik ve gelir katkısı, payback ne zaman?'",
+          "Risk/stres testi: 'Load factor 5 puan düşerse veya 2 frekans iptal olursa kârlılık nasıl etkilenir?'"
+        ]
+      },
+      "Revenue Integrity & Data Locking": {
+        "title": "Revenue Integrity & Data Locking",
+        "desc": "Anlık hesaplar, fatura öncesi değişikliklere izin verir, her değişiklik audit'e yazılır; final faturada veri kilitlenir, sonrası için onaylı fark faturaları üretilir.",
+        "value": ["Gelir bütünlüğü korunur.", "Tam denetlenebilir süreç.", "Finansal güvence."],
+        "scenario": "ADB'de bir uçuşun MTOW'u güncellenir. Sistem eski değeri saklar, yeni tutarı hesaplar, log'a işler; ay sonunda fatura kesilince veri kilitlenir."
+      },
+      "Web Portal & Self-Service": {
+        "title": "Web Portal & Self-Service",
+        "desc": "Havayolları faturalarını, hizmet detaylarını ve itirazlarını portaldan yönetir; şeffaf self-servis deneyimi sunar.",
+        "value": ["İletişim sadeleşir.", "Hatalar hızlı çözülür.", "Müşteri memnuniyeti artar."],
+        "scenario": "ADB'de Lufthansa portalda faturayı görür, bir satırı 'dispute' eder; finans aynı ekrandan yanıtlar."
+      },
+      "API-First Ecosystem": {
+        "title": "API-First Ecosystem",
+        "desc": "Tüm modüller açık API'larla ERP, ulusal e-fatura ve analitik sistemlerine bağlanır.",
+        "value": ["Entegrasyon esnekliği.", "Veri tekrarını önler.", "Gelişmiş otomasyon."],
+        "scenario": "ADB'nin SAP sistemi günlük gelir raporlarını Billing API üzerinden çeker; Excel'e gerek kalmaz."
+      },
+      "Proactive Alerts": {
+        "title": "Proactive Alerts",
+        "desc": "Sistem, operasyonel ve faturalama verilerini sürekli izleyerek olası tutarsızlıkları, eksik kayıtları veya fatura risklerini proaktif olarak tespit eder. Bu modül, sadece uyarı göndermez — aynı zamanda hangi alanın risk oluşturduğunu, kim tarafından aksiyon alınması gerektiğini ve ne kadar potansiyel gelir etkisi olduğunu da gösterir. Amaç, hatayı değil, hatanın olasılığını önceden fark etmektir.",
+        "value": [
+          "Gerçek zamanlı veri kalitesi kontrolü: eksik, çelişkili veya riskli kayıtlar anında fark edilir.",
+          "Faturalama hatalarının faturadan önce tespiti → sıfır 'manual correction' hedefi.",
+          "Operasyon, finans ve IT ekipleri için ortak erken uyarı platformu.",
+          "Gelir kaybını azaltır, müşteri itirazlarını minimize eder, SLA uyumunu güçlendirir."
+        ],
+        "alert_types": [
+          "⏱ **Zaman Tutarsızlıkları:** On-block / off-block / pushback saatleri mantıksız veya eksik → sistem uyarı üretir.",
+          "🧾 **Eksik Hizmet Bildirimi:** Uçuş tamamlandı ama zorunlu hizmet (ör. GPU, temizlik, yakıt) girilmemiş.",
+          "💰 **Tarife Uyumsuzluğu:** Faturalama kuralı var ama geçerli tarife versiyonu farklı → sistem farkı işaretler.",
+          "🛫 **Yanlış Uçuş Tipi:** Domestic/International, Cargo/Passenger veya MTOW yanlış → gelir kalemi yanlış hesaplanabilir.",
+          "📉 **Gelir Sızıntısı Riski:** Benzer uçuş profillerinde hizmet girilmiş ama bu uçuşta yok → Leakage Analytics ile bağlantılı uyarı.",
+          "🔁 **Çift Kayıt / Tekrarlı Satır:** Aynı hizmet birden fazla girilmiş veya farklı kaynaklardan iki kez geldi.",
+          "📆 **Tarife Dönem Uyuşmazlığı:** Uçuş tarihi ile geçerli tarife dönemi çakışmıyor (ör. 1 Mart öncesi eski tarife geçerli olmalı).",
+          "⚙️ **API & Veri Akışı Kesintisi:** Dış sistemlerden veri akışı durmuşsa otomatik bildirim (ör. AODB feed kesintisi 15 dk+).",
+          "💸 **Negatif veya Anormal Değerler:** Park süresi negatif, pax sayısı 0, veya ücret < minimum → otomatik 'review required'.",
+          "🧮 **Hizmet Tamamlanmadan Faturalama:** Form kapanmadan 'bill-ready' oluşmuşsa onay kuyruğuna alınır."
+        ],
+        "adb_scenario": "ADB'de bir Pegasus uçuşunda on-block saati AODB'de 10:12, hizmet formunda 10:35 olarak girilmiştir. Sistem farkı fark eder, 'Zaman Tutarsızlığı – High Priority' uyarısı üretir ve iki kaynağı karşılaştırır. Aynı gün içinde başka bir uçuşta GPU hizmeti girilmemiştir, sistem bu uçuşu 'Missing Service' olarak işaretler. Operasyon ekibi bu uyarılara dashboard üzerinden erişir, gerekirse tek tıkla 'hizmet oluştur' veya 'düzeltme talebi gönder' aksiyonlarını alır.",
+        "auto_actions": [
+          "🟢 **Auto-Validation:** Basit veri eksikleri sistem tarafından otomatik düzeltilir (ör. timezone farkı, yuvarlama).",
+          "🟡 **Assisted Resolution:** Sistem uyarı üretir ve öneri sunar (ör. 'Bu uçuşta GPU girilmemiş, benzer uçuşlarda var – ekleyelim mi?').",
+          "🔴 **Escalation Workflow:** Kritik hata → ilgili birim (finans/operasyon) bilgilendirilir, SLA timer başlar.",
+          "📊 **Alert Dashboard:** Tüm uyarılar kategori, önem ve gelir etkisine göre gruplanır. 'Resolved', 'Pending', 'Ignored' statüleri izlenir."
+        ],
+        "governance_rules": [
+          "Uyarılar konfigüre edilebilir: her havalimanı kendi eşik değerlerini tanımlayabilir.",
+          "Uyarı eşiği aşıldığında, sistem hem dashboard hem e-posta / mobil bildirim üretir.",
+          "Uyarı geçmişi (alert history) 1 yıl saklanır, denetimlerde gösterilebilir.",
+          "Tüm uyarıların çözüm süresi, sorumlusu ve aksiyon tarihi audit log'da tutulur.",
+          "Alert tipleri iş kuralı motoruyla yönetilir – yeni kontrol türleri eklenebilir."
+        ],
+        "business_impact": [
+          "Aylık ortalama 50+ yanlış/eksik hizmet faturası önceden yakalanır.",
+          "Finans kapama süresi %30 kısalır çünkü veri temizliği faturadan önce yapılır.",
+          "Müşteri itiraz oranı (dispute) %40 azalır.",
+          "Kayıp gelir oranı %0.5'ten <0.1'e iner."
+        ]
+      },
+      "Audit Management": {
+        "title": "Audit Management",
+        "desc": "Her değişiklik kullanıcı, zaman ve eski–yeni değer bilgisiyle kayıt altındadır; raporlanabilir, değiştirilemez.",
+        "value": ["Tam denetlenebilirlik.", "Regülasyon uyumu.", "Şeffaflık ve güvenilirlik."],
+        "scenario": "ADB'de finans denetçisi haftalık raporda kimlerin hangi verileri değiştirdiğini ayrıntılı inceler."
+      }
+    }
+    </script>
+
+    <!-- Modal System Script -->
+    <script>
+    (function() {
+        'use strict';
+        
+        console.log('🚀 Modal system initializing...');
+        
+        // Parse module data
+        const moduleData = JSON.parse(document.getElementById('abs-module-data').textContent);
+        console.log('✅ Module data loaded:', Object.keys(moduleData).length, 'modules');
+        
+        // Module title to key mapping (simplified)
+        const titleToKey = {
+            "AODB & Flight Data Input": "AODB & Flight Data Input",
+            "Service Management & Auto-Assign": "Service Management & Auto-Assign",
+            "Mobile Service Forms": "Mobile Service Forms",
+            "Real-Time Rating & Bill-Ready": "Real-Time Rating & Bill-Ready",
+            "Tariff Management": "Tariff Management",
+            "Leakage Analytics": "Leakage Analytics",
+            "Campaign & Incentive Engine": "Campaign & Incentive Engine",
+            "Machine Learning Tariff Recommendation": "Machine Learning Tariff Recommendation",
+            "IATA ACIC & SIS Integration": "IATA ACIC & SIS Integration",
+            "Simulation & Forecasting": "Simulation & Forecasting",
+            "Revenue Integrity & Data Locking": "Revenue Integrity & Data Locking",
+            "Web Portal & Self-Service": "Web Portal & Self-Service",
+            "API-First Ecosystem": "API-First Ecosystem",
+            "Proactive Alerts": "Proactive Alerts",
+            "Audit Management": "Audit Management"
+        };
+        
+        // Create modal HTML
+        const modalHTML = `
+            <div class="abs-modal-overlay" id="absModalOverlay" aria-hidden="true"></div>
+            <div class="abs-modal" id="absModal" role="dialog" aria-modal="true" aria-labelledby="absModalTitle" aria-describedby="absModalDesc">
+                <div class="abs-modal-header">
+                    <h2 class="abs-modal-title" id="absModalTitle"></h2>
+                    <button class="abs-modal-close" id="absModalClose" aria-label="Kapat">✕</button>
+                </div>
+                <div class="abs-modal-body" id="absModalBody">
+                    <!-- Content will be dynamically populated -->
+                </div>
+            </div>
+        `;
+        
+        // Wait for DOM to be ready
+        function initModal() {
+            // Inject modal into DOM
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            console.log('✅ Modal HTML injected');
+            
+            // Get modal elements
+            const modal = document.getElementById('absModal');
+            const overlay = document.getElementById('absModalOverlay');
+            const closeBtn = document.getElementById('absModalClose');
+            const modalTitle = document.getElementById('absModalTitle');
+            const modalBody = document.getElementById('absModalBody');
+            
+            if (!modal || !overlay || !modalBody) {
+                console.error('❌ Modal elements not found!');
+                return;
+            }
+            
+            console.log('✅ Modal elements found');
+            
+            // Track original body overflow
+            let originalBodyOverflow = '';
+            
+            // Open modal function with dynamic content rendering
+            window.openABSModal = function(key) {
+                console.log('📂 Opening modal for:', key);
+                const data = moduleData[key];
+                
+                if (!data) {
+                    console.error('❌ No data found for key:', key);
+                    return;
+                }
+                
+                console.log('✅ Data found:', data.title);
+                
+                // Set title
+                modalTitle.textContent = data.title;
+                
+                // Build modal content dynamically
+                let contentHTML = '';
+                
+                // 1. Description section (always present)
+                contentHTML += `
+                    <div class="abs-modal-section">
+                        <div class="abs-modal-section-title">Açıklama</div>
+                        <div class="abs-modal-section-content">${data.desc}</div>
+                    </div>
+                `;
+                
+                // 2. Business Value section (always present)
+                contentHTML += `
+                    <div class="abs-modal-section">
+                        <div class="abs-modal-section-title">Business Value</div>
+                        <ul class="abs-modal-list">
+                            ${data.value.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                // 3. Alert Types section (optional - conditional rendering for Proactive Alerts)
+                if (data.alert_types && Array.isArray(data.alert_types) && data.alert_types.length > 0) {
+                    console.log('✅ Rendering "Alert Types" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Uyarı Türleri</div>
+                            <ul class="abs-alert-types-list">
+                                ${data.alert_types.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 4. Scenario section (always present)
+                // Special rendering for Proactive Alerts with adb_scenario field
+                if (data.adb_scenario) {
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Gerçek Senaryo (ADB – İzmir Adnan Menderes Havalimanı)</div>
+                            <div class="abs-case-card">${data.adb_scenario}</div>
+                        </div>
+                    `;
+                } else if (data.scenario) {
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Gerçek Senaryo (ADB – İzmir Adnan Menderes Havalimanı)</div>
+                            <div class="abs-modal-scenario">${data.scenario}</div>
+                        </div>
+                    `;
+                }
+                
+                // 5. Auto Actions section (optional - conditional rendering for Proactive Alerts)
+                if (data.auto_actions && Array.isArray(data.auto_actions) && data.auto_actions.length > 0) {
+                    console.log('✅ Rendering "Auto Actions" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Otomatik Aksiyonlar</div>
+                            <ul class="abs-auto-actions-list">
+                                ${data.auto_actions.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 6. Governance Rules section (optional - conditional rendering for Proactive Alerts)
+                if (data.governance_rules && Array.isArray(data.governance_rules) && data.governance_rules.length > 0) {
+                    console.log('✅ Rendering "Governance Rules" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Yönetişim Kuralları</div>
+                            <ul class="abs-governance-rules-list">
+                                ${data.governance_rules.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 7. Business Impact section (optional - conditional rendering for Proactive Alerts)
+                if (data.business_impact && Array.isArray(data.business_impact) && data.business_impact.length > 0) {
+                    console.log('✅ Rendering "Business Impact" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Ölçülebilir İş Etkisi</div>
+                            <ul class="abs-business-impact-list">
+                                ${data.business_impact.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 8. How it works section (optional - conditional rendering)
+                if (data.how && Array.isArray(data.how) && data.how.length > 0) {
+                    console.log('✅ Rendering "How" section');
+                    contentHTML += `
+                        <div class="abs-modal-section abs-how-section">
+                            <div class="abs-modal-section-title">Nasıl Çalışır (İş Mantığı)</div>
+                            <ol class="abs-how-list">
+                                ${data.how.map(item => `<li>${item}</li>`).join('')}
+                            </ol>
+                        </div>
+                    `;
+                }
+                
+                // 9. Sample Alert section (optional - conditional rendering)
+                if (data.sample_alert) {
+                    console.log('✅ Rendering "Sample Alert" section');
+                    const alert = data.sample_alert;
+                    const confidencePercent = Math.round(alert.confidence * 100);
+                    
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Örnek Uyarı</div>
+                            <div class="abs-alert-card">
+                                <div class="abs-alert-header">
+                                    <h4 class="abs-alert-headline">${alert.headline}</h4>
+                                    <span class="abs-confidence-badge">%${confidencePercent} Güven</span>
+                                </div>
+                                ${alert.reasons && alert.reasons.length > 0 ? `
+                                    <ul class="abs-reasons-list">
+                                        ${alert.reasons.map(reason => `<li>${reason}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                                ${(alert.cta_primary || alert.cta_secondary) ? `
+                                    <div class="abs-actions">
+                                        ${alert.cta_primary ? `
+                                            <button class="btn btn-primary" onclick="alert('${alert.cta_primary}: Hizmet satırı oluşturma işlemi simüle edildi.')">
+                                                ${alert.cta_primary}
+                                            </button>
+                                        ` : ''}
+                                        ${alert.cta_secondary ? `
+                                            <button class="btn btn-secondary" onclick="alert('${alert.cta_secondary}: Yanlış alarm işaretleme simüle edildi. Sistem öğrendi.')">
+                                                ${alert.cta_secondary}
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // 10. Triggers section (optional - conditional rendering)
+                if (data.triggers && Array.isArray(data.triggers) && data.triggers.length > 0) {
+                    console.log('✅ Rendering "Triggers" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Tetikleyiciler</div>
+                            <ul class="abs-triggers-list">
+                                ${data.triggers.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 11. Capabilities section (optional - conditional rendering)
+                if (data.capabilities && Array.isArray(data.capabilities) && data.capabilities.length > 0) {
+                    console.log('✅ Rendering "Capabilities" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Yetenekler</div>
+                            <ul class="abs-capabilities-list">
+                                ${data.capabilities.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 12. Controls section (optional - conditional rendering)
+                if (data.controls && Array.isArray(data.controls) && data.controls.length > 0) {
+                    console.log('✅ Rendering "Controls" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Kontroller</div>
+                            <ul class="abs-controls-list">
+                                ${data.controls.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 13. Validations section (optional - conditional rendering)
+                if (data.validations && Array.isArray(data.validations) && data.validations.length > 0) {
+                    console.log('✅ Rendering "Validations" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Doğrulamalar</div>
+                            <ul class="abs-validations-list">
+                                ${data.validations.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 14. Assumptions section (optional - conditional rendering)
+                if (data.assumptions && Array.isArray(data.assumptions) && data.assumptions.length > 0) {
+                    console.log('✅ Rendering "Assumptions" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Varsayımlar</div>
+                            <ul class="abs-assumptions-list">
+                                ${data.assumptions.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 15. Outputs section (optional - conditional rendering)
+                if (data.outputs && Array.isArray(data.outputs) && data.outputs.length > 0) {
+                    console.log('✅ Rendering "Outputs" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Çıktılar</div>
+                            <ul class="abs-outputs-list">
+                                ${data.outputs.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // 16. Use Cases section (optional - conditional rendering)
+                if (data.use_cases && Array.isArray(data.use_cases) && data.use_cases.length > 0) {
+                    console.log('✅ Rendering "Use Cases" section');
+                    contentHTML += `
+                        <div class="abs-modal-section">
+                            <div class="abs-modal-section-title">Kullanım Örnekleri</div>
+                            <ul class="abs-use-cases-list">
+                                ${data.use_cases.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                // Inject content into modal body
+                modalBody.innerHTML = contentHTML;
+                
+                // Lock body scroll
+                originalBodyOverflow = document.body.style.overflow;
+                document.body.style.overflow = 'hidden';
+                
+                // Show modal
+                overlay.classList.add('active');
+                modal.classList.add('active');
+                overlay.setAttribute('aria-hidden', 'false');
+                
+                console.log('✅ Modal opened successfully');
+                
+                // Focus close button
+                setTimeout(() => closeBtn.focus(), 100);
+            };
+            
+            // Close modal function
+            function closeModal() {
+                console.log('🔒 Closing modal');
+                modal.classList.remove('active');
+                overlay.classList.remove('active');
+                overlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = originalBodyOverflow;
+            }
+            
+            // Event listeners for closing
+            closeBtn.addEventListener('click', closeModal);
+            overlay.addEventListener('click', closeModal);
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            console.log('✅ Modal event listeners attached');
+            
+            // Make cards clickable
+            function setupCardListeners() {
+                const cards = document.querySelectorAll('.module-card');
+                console.log('🔍 Found', cards.length, 'cards');
+                
+                let successCount = 0;
+                
+                cards.forEach((card, index) => {
+                    const titleElement = card.querySelector('.module-title');
+                    if (!titleElement) {
+                        console.warn(`⚠️ Card ${index} has no title element`);
+                        return;
+                    }
+                    
+                    const titleText = titleElement.textContent.trim();
+                    const moduleKey = titleToKey[titleText];
+                    
+                    if (!moduleKey || !moduleData[moduleKey]) {
+                        console.warn(`⚠️ No module key found for: "${titleText}"`);
+                        return;
+                    }
+                    
+                    // Add click handler directly to card
+                    card.style.cursor = 'pointer';
+                    card.setAttribute('data-module', moduleKey);
+                    card.classList.add('module-link');
+                    
+                    // Remove any existing listeners by cloning
+                    const newCard = card.cloneNode(true);
+                    card.parentNode.replaceChild(newCard, card);
+                    
+                    // Add fresh click listener
+                    newCard.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🖱️ Card clicked:', moduleKey);
+                        window.openABSModal(moduleKey);
+                    }, { capture: true });
+                    
+                    // Add keyboard support
+                    newCard.setAttribute('tabindex', '0');
+                    newCard.setAttribute('role', 'button');
+                    newCard.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            console.log('⌨️ Card activated via keyboard:', moduleKey);
+                            window.openABSModal(moduleKey);
+                        }
+                    });
+                    
+                    successCount++;
+                    console.log(`✅ Card ${index + 1} setup: "${titleText}" → ${moduleKey}`);
+                });
+                
+                console.log(`🎉 Successfully set up ${successCount} clickable cards`);
+            }
+            
+            // Setup cards after a short delay to ensure DOM is ready
+            setTimeout(setupCardListeners, 200);
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initModal);
+        } else {
+            initModal();
+        }
+        
+    })();
+    </script>
+</body>
+</html>
+
+

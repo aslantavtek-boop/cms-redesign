@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeronautical Billing System - PRD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+            background: #f5f5f7;
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #1d1d1f;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            color: #1d1d1f;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #6e6e73;
+            font-size: 1.25rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+        }
+        
+        .header-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #1d1d1f;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            background: #007AFF;
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: #007AFF;
+            color: white;
+        }
+        
+        /* PRD Section Styles */
+        .prd-container {
+            background: white;
+            border-radius: 18px;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+        }
+        
+        .prd-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f5f5f7;
+        }
+        
+        .prd-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .prd-subtitle {
+            font-size: 1.75rem;
+            font-weight: 500;
+            color: #007AFF;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.015em;
+        }
+        
+        .prd-version {
+            font-size: 0.9375rem;
+            color: #6e6e73;
+            font-weight: 400;
+        }
+        
+        .prd-purpose {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(90, 200, 250, 0.05));
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 3rem;
+            border-left: 4px solid #007AFF;
+        }
+        
+        .prd-purpose h4 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 1rem;
+            letter-spacing: -0.015em;
+        }
+        
+        .prd-purpose p {
+            font-size: 1rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+        }
+        
+        .prd-features {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .prd-feature {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.75rem;
+            background: #fbfbfd;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+        
+        .prd-feature:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateX(4px);
+        }
+        
+        .prd-feature-highlight {
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.03), rgba(48, 209, 88, 0.03));
+            border-left: 4px solid #34C759;
+        }
+        
+        .prd-feature-number {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #007AFF, #5AC8FA);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        
+        .prd-feature-content {
+            flex: 1;
+        }
+        
+        .prd-feature-content h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+        
+        .prd-feature-content h6 {
+            font-size: 1.0625rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 1.5rem 0 0.75rem;
+            letter-spacing: -0.01em;
+        }
+        
+        .prd-feature-content p {
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            margin-bottom: 0.75rem;
+        }
+        
+        .prd-feature-content ul,
+        .prd-feature-content ol {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .prd-feature-content ul li,
+        .prd-feature-content ol li {
+            font-size: 0.9375rem;
+            color: #1d1d1f;
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+        
+        .prd-value {
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.1), rgba(48, 209, 88, 0.1));
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: #1d1d1f;
+            font-weight: 500;
+            margin-top: 1rem;
+            border-left: 3px solid #34C759;
+        }
+        
+        .prd-quote {
+            background: linear-gradient(135deg, rgba(0, 122, 255, 0.08), rgba(90, 200, 250, 0.08));
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1.0625rem;
+            color: #1d1d1f;
+            font-weight: 500;
+            font-style: italic;
+            margin: 1.5rem 0;
+            border-left: 4px solid #007AFF;
+            text-align: center;
+        }
+        
+        .prd-conclusion {
+            background: linear-gradient(135deg, rgba(142, 142, 147, 0.05), rgba(199, 199, 204, 0.05));
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-top: 3rem;
+            border: 2px solid rgba(0, 0, 0, 0.06);
+        }
+        
+        .prd-conclusion h4 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.015em;
+        }
+        
+        .prd-final {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: #1d1d1f;
+            margin: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.75rem;
+            }
+
+            header {
+                margin-bottom: 3rem;
+                padding: 1rem 0;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .header-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .prd-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .prd-title {
+                font-size: 1.75rem;
+            }
+            
+            .prd-subtitle {
+                font-size: 1.25rem;
+            }
+            
+            .prd-version {
+                font-size: 0.875rem;
+            }
+            
+            .prd-purpose {
+                padding: 1.5rem;
+            }
+            
+            .prd-purpose h4 {
+                font-size: 1.25rem;
+            }
+            
+            .prd-feature {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .prd-feature-number {
+                width: 40px;
+                height: 40px;
+                font-size: 1.125rem;
+            }
+            
+            .prd-feature-content h5 {
+                font-size: 1.125rem;
+            }
+            
+            .prd-conclusion {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aeronautical Billing System</h1>
+            <p class="subtitle">Product Requirements Document</p>
+            <div class="header-nav">
+                <a href="prd.html" class="nav-link active">📄 Product Requirements</a>
+                <a href="aeronautical-billing-dashboard.html" class="nav-link">📊 Business Flow Dashboard</a>
+            </div>
+        </header>
+
+        <div class="prd-container">
+            <div class="prd-header">
+                <h2 class="prd-title">✈️ Aeronautical Billing System</h2>
+                <h3 class="prd-subtitle">Product Requirements Document (PRD)</h3>
+                <p class="prd-version">Versiyon 2.0 – Real-Time Rating, Deferred Invoice & Full Audit Integrity</p>
+            </div>
+
+            <div class="prd-purpose">
+                <h4>🎯 Ürün Amacı</h4>
+                <p>Aeronautical Billing System, havalimanlarında uçuş bazlı (aeronautical) gelirlerin otomatik, doğru ve denetlenebilir biçimde yönetilmesini sağlar. Sistem, AODB'den aldığı operasyonel verileri gerçek zamanlı olarak hesaplar, ancak basılı faturayı dönem sonunda oluşturur. Amaç; gelir kayıplarını önlemek, operasyonel esnekliği korumak ve tüm süreci uçtan uca izlenebilir hale getirmektir.</p>
+            </div>
+
+            <div class="prd-features">
+                <div class="prd-feature">
+                    <div class="prd-feature-number">1</div>
+                    <div class="prd-feature-content">
+                        <h5>Gerçek Zamanlı Hesaplama (Bill-Ready Rating)</h5>
+                        <p>Sistem, uçuş hareketi, MTOW veya hizmet tamamlama bilgisi geldiği anda tanımlı tarifelere göre faturaya esas tutarları (bill-ready lines) anlık hesaplar. Bu satırlar, fatura oluşturulmadan önce bile finansal olarak hazır durumdadır ("bill-ready draft"). Tüm gelir akışı operasyon anında izlenebilir hale gelir.</p>
+                        <div class="prd-value">✓ Anlık gelir görünürlüğü, mali kapanış hızında artış, manuel hesaplamaların ortadan kalkması.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">2</div>
+                    <div class="prd-feature-content">
+                        <h5>Gelir Sızıntısı (Leakage) Analitiği & Öneri Motoru</h5>
+                        <p>Sistem, operasyonel hareket kayıtlarını faturalama satırlarıyla karşılaştırarak eksik, hatalı veya çelişkili gelir durumlarını tespit eder. Yapay zekâ destekli öneri motoru, tekrar eden hataları belirleyip sistem yöneticilerine düzeltici kural önerileri sunar.</p>
+                        <div class="prd-value">✓ Gelir kaybı azalır, doğruluk artar, faturalama güvenilir hale gelir.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">3</div>
+                    <div class="prd-feature-content">
+                        <h5>IATA ACIC & SIS Entegrasyonu</h5>
+                        <p>Tüm faturalama süreci IATA standartlarına uygun çalışır. Sistem, ACIC veritabanı ile fiyat kontrolü yapar ve IATA SIS formatında e-fatura oluşturabilir. Bu sayede uluslararası uyumluluk, doğruluk ve hız sağlanır.</p>
+                        <div class="prd-value">✓ Standart uyumu, dış sistemlere kolay geçiş, hatasız e-faturalama.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">4</div>
+                    <div class="prd-feature-content">
+                        <h5>Kampanya & Teşvik Modülü (Incentive Engine)</h5>
+                        <p>Sistem, taşıyıcı performansına veya stratejik hedeflere dayalı teşvikleri otomatik uygular. Örneğin: Yıllık uçuş artışı, yeni rota açılışı, gecikme azaltımı gibi koşullar gerçekleştiğinde sistem otomatik olarak indirim hesaplar ve retro-düzeltme (retro adjustment) satırlarını üretir.</p>
+                        <div class="prd-value">✓ Ticari şeffaflık, performansa dayalı gelir yönetimi, kolay geri izleme.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">5</div>
+                    <div class="prd-feature-content">
+                        <h5>Simülasyon & Tahmine Dayalı Gelir Analizi</h5>
+                        <p>Kullanıcılar "ne olursa" senaryoları çalıştırabilir. Örneğin "bu taşıyıcı yeni rota açarsa" veya "MTOW ortalaması artarsa" sistem potansiyel gelir farkını ve ROI değerini hesaplar. Ayrıca zaman serisi analiziyle gelecekteki gelir ve nakit akışı tahminleri oluşturur.</p>
+                        <div class="prd-value">✓ Finansal planlama gücü artar, veriyle destekli karar mekanizması oluşur.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">6</div>
+                    <div class="prd-feature-content">
+                        <h5>Web Portal & Self-Service Modülü</h5>
+                        <p>Taşıyıcılar ve yer hizmeti sağlayıcıları portal üzerinden uçuş ve hizmet beyanlarını girebilir, taslak faturaları görebilir, muafiyet taleplerinde bulunabilir, itiraz (dispute) açabilir, gelişmiş tarife simülatörünü kullanarak anlık fiyat hesaplayabilir. Portal mobil uyumludur ve kullanıcılar sistem bildirimleriyle yönlendirilir.</p>
+                        <div class="prd-value">✓ Şeffaflık, müşteri memnuniyeti ve veri paylaşımında kolaylık.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">7</div>
+                    <div class="prd-feature-content">
+                        <h5>API-First & Açık Ekosistem</h5>
+                        <p>Her modül açık API olarak çalışır: tarife, kampanya, hizmet, portal, faturalama vb. Üçüncü taraf sistemlerle (ERP, finans, e-fatura platformları) kolay entegrasyon mümkündür.</p>
+                        <div class="prd-value">✓ Esnek mimari, kolay uyarlama, microservice ölçeklenebilirliği.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">8</div>
+                    <div class="prd-feature-content">
+                        <h5>Kural Öğrenme & Tarif Öneri Motoru</h5>
+                        <p>Sistem, geçmiş faturalama ve pazar verilerini analiz ederek otomatik indirim veya fiyat önerileri sunar. Örneğin: "X taşıyıcısına %3 indirim verilirse Y rotasında trafik %8 artar." Bu öneriler, ticari planlamayı veriyle destekler.</p>
+                        <div class="prd-value">✓ Proaktif gelir artırımı, AI destekli stratejik kararlar.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">9</div>
+                    <div class="prd-feature-content">
+                        <h5>Proaktif Bildirim & Uyarı Sistemi</h5>
+                        <p>Sistem, kritik olaylarda ilgili kullanıcıları otomatik bilgilendirir: Beyan süresi dolmak üzere → uyarı, Fatura itiraz süresi yaklaşınca → hatırlatma, Hizmet bildirimi eksik → tamamlatma isteği, SLA ihlali → yöneticilere alarm.</p>
+                        <div class="prd-value">✓ Süreç farkındalığı artar, SLA yönetimi kolaylaşır.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">10</div>
+                    <div class="prd-feature-content">
+                        <h5>Tariff Management</h5>
+                        <p>Tüm tarifeler versiyonlu şekilde yönetilir. Yeni tarife yayımlandığında sistem eski sürümü korur. Değişiklikler fatura hesaplamalarını otomatik etkiler ve geçmiş farklar hesaplanır.</p>
+                        <div class="prd-value">✓ Versiyon kontrolü, geçmiş doğrulama, gelir tutarlılığı.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">11</div>
+                    <div class="prd-feature-content">
+                        <h5>Service Management & Auto-Assign</h5>
+                        <p>Uçuş oluştuğu anda sistem tanımlı kurallara göre gerekli hizmetleri (GPU, pushback, temizlik, vb.) otomatik oluşturur. Kullanıcı isterse ekleme veya çıkarma yapabilir. Tüm değişiklikler loglanır ve faturaya otomatik yansır.</p>
+                        <div class="prd-value">✓ Otomasyon, eksiksiz hizmet kaydı, hızlanan süreç.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">12</div>
+                    <div class="prd-feature-content">
+                        <h5>Mobil Servis Formları</h5>
+                        <p>Saha ekipleri mobil cihazlardan hizmet detaylarını (zaman, miktar, ekipman, imza vb.) girer. Veri anında sisteme aktarılır, manuel raporlamaya gerek kalmaz.</p>
+                        <div class="prd-value">✓ Kağıtsız süreç, anlık doğrulama, veri güvenilirliği.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">13</div>
+                    <div class="prd-feature-content">
+                        <h5>Performance</h5>
+                        <p>Sistem, yüksek hacimli havalimanlarında bile binlerce uçuşu eşzamanlı işleyebilir. Veritabanı ve uygulama katmanı, yüksek performanslı hesaplamalar için optimize edilmiştir.</p>
+                        <div class="prd-value">✓ Gerçek zamanlı gelir hesaplama, ölçeklenebilirlik, sistem kararlılığı.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature prd-feature-highlight">
+                    <div class="prd-feature-number">14</div>
+                    <div class="prd-feature-content">
+                        <h5>Revenue Integrity & Data Locking (Hybrid Model – Deferred Invoice Architecture)</h5>
+                        <h6>🎯 Amaç</h6>
+                        <p>Uçuş verilerinden gelir hesaplamalarını anlık yaparken, basılı faturaya kadar değişikliklere izin vermek ve tüm değişiklikleri denetlenebilir şekilde kaydetmek. Amaç, finansal bütünlüğü korurken operasyonun doğallığını bozmamaktır.</p>
+                        
+                        <h6>⚙️ Yaklaşım</h6>
+                        <p>Sistem, "Soft Lock + Versioned Snapshot + Pre-Invoice Audit Layer" prensibiyle çalışır:</p>
+                        <ul>
+                            <li>Her gelir hesaplaması (bill-ready line) ayrı bir snapshot olarak saklanır.</li>
+                            <li>Uçuş verisi güncellenebilir, ancak her değişiklik yeni bir versiyon oluşturur.</li>
+                            <li>Final fatura oluşturulmadan önce sistem ilgili veriyi billing-locked statüsüne getirir.</li>
+                        </ul>
+                        
+                        <h6>🔄 Akış</h6>
+                        <ol>
+                            <li><strong>Gerçek Zamanlı Hesaplama:</strong> Uçuş verileri değiştikçe sistem tutarları yeniden hesaplar. Bu hesaplamalar "bill-ready draft" statüsünde tutulur.</li>
+                            <li><strong>Değişiklik & Versiyonlama:</strong> Operasyon ekibi MTOW, zaman, hizmet vb. alanlarda güncelleme yapabilir. Her güncelleme otomatik olarak versiyonlanır (ör. v1.0 → v1.1).</li>
+                            <li><strong>Audit Trail:</strong> Her değişiklik kullanıcı, tarih, alan, eski ve yeni değerle birlikte kaydedilir. Audit kayıtları değiştirilemez.</li>
+                            <li><strong>Pre-Invoice Validation:</strong> Final fatura öncesinde sistem otomatik doğrulama yapar ve gerekirse "approval queue" gönderir.</li>
+                            <li><strong>Final Lock & Invoice Generation:</strong> Basılı fatura oluşturulduğunda sistem ilgili uçuşları "billing-locked" statüsüne alır.</li>
+                            <li><strong>Post-Invoice Amendment:</strong> Fatura sonrası değişiklik talepleri finans onayına gider. Onay sonrası fark faturası oluşturulur.</li>
+                        </ol>
+                        
+                        <div class="prd-quote">
+                            "Fatura kesilene kadar veri yaşayabilir, ama her değişikliğini hatırlar. Fatura kesildiğinde veri donar ve tarihe geçer."
+                        </div>
+                        
+                        <div class="prd-value">✓ Faturalama öncesi operasyonel esneklik korunur. Tüm değişiklikler kayıt altına alınır. Denetim izleri tam, detaylı ve değiştirilemezdir.</div>
+                    </div>
+                </div>
+
+                <div class="prd-feature">
+                    <div class="prd-feature-number">15</div>
+                    <div class="prd-feature-content">
+                        <h5>Audit Management (Bağımsız Modül)</h5>
+                        <p>Audit mekanizması sadece Revenue Integrity'ye değil, sistemin tümüne entegredir. Her modül (tarife, hizmet, kampanya, portal, fatura) için ayrı audit log tutulur. Kullanıcı bazında erişim, izleme ve raporlama yapılabilir.</p>
+                        <p><strong>Özellikler:</strong> Modül bazlı audit konfigürasyonu, Arama & filtreleme (modül, kullanıcı, tarih, işlem tipi), Audit rolleri: Viewer / Supervisor / Compliance, Gelişmiş raporlama: değişiklik yoğunluğu, kullanıcı davranışı, anomaly detection.</p>
+                        <div class="prd-value">✓ Denetim kolaylığı, veri güvenilirliği, regülasyon uyumu (IATA, ISO, GDPR).</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prd-conclusion">
+                <h4>🔚 Genel Sonuç</h4>
+                <p class="prd-final">Sonuçta sistem, havalimanı gelir yönetimini <strong>"reaktif" yapıdan "proaktif ve denetlenebilir" modele</strong> taşır.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth fade-in on load
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
+
