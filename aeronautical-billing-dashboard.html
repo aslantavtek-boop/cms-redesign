@@ -1488,9 +1488,9 @@
           "Manuel hesap/aktarımı azaltarak hata riskini düşürür.",
           "Operasyonda değişiklik olduğunda satırlar otomatik güncellenir."
         ],
-        "scenario": "ADB'de PC2038 iniş yapar. Sistem on-block saatine göre park süresini hesaplar, dar gövde park tarifesini uygular ve 75 dakikalık 'bill-ready' satırı oluşturur. 14:10'da hizmet formlarından GPU tamamlanması girilince ikinci bir satır otomatik eklenir. 14:18'de MTOW değeri güncellenirse park tutarı da anında yeniden hesaplanır. Henüz fatura kesilmeden gün içi gelir raporunda bu iki kalem görünür.",
+        "scenario": "ADB'de PC2038 iniş yapar. Sistem off-block saatine göre park süresini hesaplar, dar gövde park tarifesini uygular ve 75 dakikalık 'bill-ready' satırı oluşturur. 14:10'da hizmet formlarından GPU tamamlanması girilince ikinci bir satır otomatik eklenir. 14:18'de MTOW değeri güncellenirse park tutarı da anında yeniden hesaplanır. Henüz fatura kesilmeden gün içi gelir raporunda bu iki kalem görünür.",
         "triggers": [
-          "Uçuş zamanları: on-block / off-block / actual arrival–departure güncellemeleri.",
+          "Uçuş zamanları: off-block / on-block / actual arrival–departure güncellemeleri.",
           "Hizmet olayları: hizmet başlangıç–bitiş, miktar/süre doğrulaması.",
           "Kritik alanlar: MTOW, aircraft type, terminal/stand, domestic/international bayrağı.",
           "Tarife değişikliği: geçerlilik tarihi gelen yeni sürümün devreye girmesi."
@@ -1642,7 +1642,7 @@
           "Gelir kaybını azaltır, müşteri itirazlarını minimize eder, SLA uyumunu güçlendirir."
         ],
         "alert_types": [
-          "⏱ **Zaman Tutarsızlıkları:** On-block / off-block / pushback saatleri mantıksız veya eksik → sistem uyarı üretir.",
+          "⏱ **Zaman Tutarsızlıkları:** Off-block / on-block / pushback saatleri mantıksız veya eksik → sistem uyarı üretir.",
           "🧾 **Eksik Hizmet Bildirimi:** Uçuş tamamlandı ama zorunlu hizmet (ör. GPU, temizlik, yakıt) girilmemiş.",
           "💰 **Tarife Uyumsuzluğu:** Faturalama kuralı var ama geçerli tarife versiyonu farklı → sistem farkı işaretler.",
           "🛫 **Yanlış Uçuş Tipi:** Domestic/International, Cargo/Passenger veya MTOW yanlış → gelir kalemi yanlış hesaplanabilir.",
@@ -1653,7 +1653,7 @@
           "💸 **Negatif veya Anormal Değerler:** Park süresi negatif, pax sayısı 0, veya ücret < minimum → otomatik 'review required'.",
           "🧮 **Hizmet Tamamlanmadan Faturalama:** Form kapanmadan 'bill-ready' oluşmuşsa onay kuyruğuna alınır."
         ],
-        "adb_scenario": "ADB'de bir Pegasus uçuşunda on-block saati AODB'de 10:12, hizmet formunda 10:35 olarak girilmiştir. Sistem farkı fark eder, 'Zaman Tutarsızlığı – High Priority' uyarısı üretir ve iki kaynağı karşılaştırır. Aynı gün içinde başka bir uçuşta GPU hizmeti girilmemiştir, sistem bu uçuşu 'Missing Service' olarak işaretler. Operasyon ekibi bu uyarılara dashboard üzerinden erişir, gerekirse tek tıkla 'hizmet oluştur' veya 'düzeltme talebi gönder' aksiyonlarını alır.",
+        "adb_scenario": "ADB'de bir Pegasus uçuşunda off-block saati AODB'de 10:12, hizmet formunda 10:35 olarak girilmiştir. Sistem farkı fark eder, 'Zaman Tutarsızlığı – High Priority' uyarısı üretir ve iki kaynağı karşılaştırır. Aynı gün içinde başka bir uçuşta GPU hizmeti girilmemiştir, sistem bu uçuşu 'Missing Service' olarak işaretler. Operasyon ekibi bu uyarılara dashboard üzerinden erişir, gerekirse tek tıkla 'hizmet oluştur' veya 'düzeltme talebi gönder' aksiyonlarını alır.",
         "auto_actions": [
           "🟢 **Auto-Validation:** Basit veri eksikleri sistem tarafından otomatik düzeltilir (ör. timezone farkı, yuvarlama).",
           "🟡 **Assisted Resolution:** Sistem uyarı üretir ve öneri sunar (ör. 'Bu uçuşta GPU girilmemiş, benzer uçuşlarda var – ekleyelim mi?').",
@@ -2170,7 +2170,7 @@
                         </g>
 
                         <!-- Processing & Intelligence -->
-                        <g class="hp-node" data-title="Gerçek Zamanlı Rating (Bill-Ready)" data-desc="On-block, MTOW ve hizmet bilgileriyle satırlar anında hesaplandı.">
+                        <g class="hp-node" data-title="Gerçek Zamanlı Rating (Bill-Ready)" data-desc="Off-block, MTOW ve hizmet bilgileriyle satırlar anında hesaplandı.">
                             <rect x="120" y="240" width="260" height="60" fill="url(#hp-gPI)" stroke="rgba(255,255,255,0.2)"/>
                             <text x="250" y="272" text-anchor="middle">Gerçek Zamanlı Rating</text>
                         </g>
@@ -2275,7 +2275,7 @@
                 <div class="hp-card">
                     <h3 style="margin: 4px 0 8px; color: var(--hp-text);">🎯 Gerçek Senaryo (ADB)</h3>
                     <p style="color: var(--hp-muted); font-size: 0.9375rem; line-height: 1.6;">
-                        <strong style="color: var(--hp-text);">PC2038 (İzmir–İstanbul)</strong> uçuşu on-block olduğu anda (10:12), 
+                        <strong style="color: var(--hp-text);">PC2038 (İzmir–İstanbul)</strong> uçuşu off-block olduğu anda (10:12), 
                         sistem AODB'den alınan MTOW (78t) ve park süresine (72 dk) göre iniş ve park ücretlerini anında hesapladı. 
                         Saha ekipleri GPU ve pushback hizmetlerini mobil formdan kapattığında (T+8dk), hizmet kalemleri de bill-ready 
                         satırlara eklendi. Geçerli tarife versiyonu (1 Mart 2025) otomatik uygulandı ve şirketin yıllık %3 teşvik 
