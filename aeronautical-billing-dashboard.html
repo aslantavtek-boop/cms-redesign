@@ -224,6 +224,29 @@
             margin-bottom: 0.5rem;
             line-height: 1.4;
             letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .priority-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
+        .priority-low {
+            background: rgba(94, 129, 244, 0.15);
+            color: #7fa3f7;
+            border: 1px solid rgba(94, 129, 244, 0.3);
         }
 
         .module-description {
@@ -719,7 +742,7 @@
                         <div class="tooltip">Automated incentive application and tracking</div>
                     </div>
                     <div class="module-card">
-                        <div class="module-title">Machine Learning Tariff Recommendation</div>
+                        <div class="module-title">Machine Learning Tariff Recommendation <span class="priority-badge priority-low">🔵 Düşük Öncelik</span></div>
                         <div class="module-description">AI-powered pricing optimization and suggestions</div>
                         <div class="tooltip">Predictive analytics for optimal pricing strategies</div>
                     </div>
