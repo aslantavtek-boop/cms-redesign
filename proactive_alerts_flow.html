@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proactive Alerts - Akış Diyagramı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #e2e8f0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+        
+        h1 {
+            color: #f1f5f9;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+        
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.125rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Navigation */
+        .header-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            color: #e2e8f0;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+        }
+        
+        .nav-link.active {
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+            color: #06b6d4;
+        }
+        
+        /* Main Content */
+        .flow-diagram-container {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 2rem;
+        }
+        
+        .diagram-title {
+            text-align: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .diagram-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-bottom: 3rem;
+        }
+        
+        /* Flow Diagram */
+        .flow-diagram {
+            width: 100%;
+            overflow-x: auto;
+            padding: 2rem 0;
+        }
+        
+        .flow-svg {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        /* Node styles */
+        .node-rect {
+            transition: all 0.3s ease;
+        }
+        
+        .node-rect:hover {
+            filter: brightness(1.2);
+        }
+        
+        .node-text {
+            pointer-events: none;
+        }
+        
+        /* Caption */
+        .diagram-caption {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(245, 158, 11, 0.1));
+            border-left: 4px solid #06b6d4;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-top: 3rem;
+        }
+        
+        .caption-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #06b6d4;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .caption-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #cbd5e1;
+        }
+        
+        /* Legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+        }
+        
+        .legend-box {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+        
+        .legend-operational {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .legend-validation {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .legend-alert {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .legend-action {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+        
+        .legend-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .flow-diagram-container {
+                padding: 2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+            }
+            
+            .header-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .flow-diagram-container {
+                padding: 1.5rem;
+            }
+            
+            .diagram-caption {
+                padding: 1rem 1.5rem;
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🧭 Proactive Alerts Akış Diyagramı</h1>
+            <p class="subtitle">Zaman Tutarsızlığı Tespiti Süreç Akışı</p>
+            <div class="header-nav">
+                <a href="aeronautical-billing-dashboard.html" class="nav-link">📊 Business Flow Dashboard</a>
+                <a href="prd.html" class="nav-link">📄 Product Requirements</a>
+                <a href="proactive-vs-leakage.html" class="nav-link">⚡ Proactive vs. Leakage</a>
+                <a href="proactive_alerts_flow.html" class="nav-link active">🧭 Proactive Alerts Akış</a>
+            </div>
+        </header>
+
+        <!-- Flow Diagram -->
+        <div class="flow-diagram-container">
+            <h2 class="diagram-title">Proactive Alerts – Zaman Tutarsızlığı Tespiti Akışı</h2>
+            <p class="diagram-subtitle">ADB (İzmir Adnan Menderes Havalimanı) Örneği</p>
+            
+            <div class="flow-diagram">
+                <svg class="flow-svg" viewBox="0 0 1200 1400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- Arrow marker -->
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#64748b" />
+                        </marker>
+                        
+                        <!-- Alert arrow marker -->
+                        <marker id="arrowhead-alert" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#ef4444" />
+                        </marker>
+                        
+                        <!-- Success arrow marker -->
+                        <marker id="arrowhead-success" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <polygon points="0 0, 10 3, 0 6" fill="#10b981" />
+                        </marker>
+                        
+                        <!-- Gradients -->
+                        <linearGradient id="grad-operational" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <linearGradient id="grad-validation" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <linearGradient id="grad-alert" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <linearGradient id="grad-action" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+                        </linearGradient>
+                        
+                        <linearGradient id="grad-success" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Node 1: Uçuş Oluştu -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="20" width="300" height="80" rx="12" 
+                              fill="url(#grad-operational)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="55" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Uçuş Oluştu
+                        </text>
+                        <text class="node-text" x="600" y="75" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            AODB: PC2038 | 10:12
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 1 to 2 -->
+                    <path d="M 600 100 L 600 140" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" fill="none"/>
+                    
+                    <!-- Node 2: Servisler Otomatik Atandı -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="140" width="300" height="70" rx="12" 
+                              fill="url(#grad-operational)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="170" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Servisler Otomatik Atandı
+                        </text>
+                        <text class="node-text" x="600" y="190" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Auto-Assign: GPU, Pushback, Temizlik
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 2 to 3 -->
+                    <path d="M 600 210 L 600 250" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" fill="none"/>
+                    
+                    <!-- Node 3: Mobil Servis Girişi -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="250" width="300" height="80" rx="12" 
+                              fill="url(#grad-operational)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="280" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Mobil Servis Girişi
+                        </text>
+                        <text class="node-text" x="600" y="300" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Saha Ekibi: GPU tamamlandı
+                        </text>
+                        <text class="node-text" x="600" y="317" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            On-block saati: 10:35
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 3 to 4 -->
+                    <path d="M 600 330 L 600 370" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" fill="none"/>
+                    
+                    <!-- Node 4: Doğrulama Motoru -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="370" width="300" height="70" rx="12" 
+                              fill="url(#grad-validation)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="400" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Doğrulama Motoru
+                        </text>
+                        <text class="node-text" x="600" y="420" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            AODB vs. Hizmet Formu Karşılaştırma
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 4 to 5 -->
+                    <path d="M 600 440 L 600 480" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" fill="none"/>
+                    
+                    <!-- Node 5: Eşik Kontrolü -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="480" width="300" height="80" rx="12" 
+                              fill="url(#grad-validation)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="510" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Eşik Kontrolü (±10 dk)
+                        </text>
+                        <text class="node-text" x="600" y="530" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Fark: 23 dakika
+                        </text>
+                        <text class="node-text" x="600" y="547" text-anchor="middle" fill="#ef4444" font-size="13" font-weight="600">
+                            ⚠️ Eşik Aşıldı!
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 5 to 6 (Alert) -->
+                    <path d="M 600 560 L 600 600" stroke="#ef4444" stroke-width="3" marker-end="url(#arrowhead-alert)" fill="none" stroke-dasharray="5,5"/>
+                    
+                    <!-- Node 6: Uyarı Üretildi -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="600" width="300" height="80" rx="12" 
+                              fill="url(#grad-alert)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="630" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Uyarı Üretildi
+                        </text>
+                        <text class="node-text" x="600" y="650" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Time Inconsistency – High Priority
+                        </text>
+                        <text class="node-text" x="600" y="667" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            PC2038: AODB vs Form = 23 dk fark
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 6 to 7 -->
+                    <path d="M 600 680 L 600 720" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" fill="none"/>
+                    
+                    <!-- Node 7: Kullanıcı İncelemesi -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="720" width="300" height="80" rx="12" 
+                              fill="url(#grad-action)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="750" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Kullanıcı İncelemesi
+                        </text>
+                        <text class="node-text" x="600" y="770" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Operasyon Ekibi Dashboard'dan İnceler
+                        </text>
+                        <text class="node-text" x="600" y="787" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            ✓ Doğrula / 🔧 Düzelt
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 7 to 8 -->
+                    <path d="M 600 800 L 600 840" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)" fill="none"/>
+                    
+                    <!-- Node 8: Veri Senkronizasyonu -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="840" width="300" height="80" rx="12" 
+                              fill="url(#grad-action)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="870" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Veri Senkronizasyonu
+                        </text>
+                        <text class="node-text" x="600" y="890" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            AODB verisi onaylandı: 10:12
+                        </text>
+                        <text class="node-text" x="600" y="907" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Yeniden Fiyatlama (Re-Rating)
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 8 to 9 -->
+                    <path d="M 600 920 L 600 960" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead-success)" fill="none"/>
+                    
+                    <!-- Node 9: Bill-Ready Güncellendi -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="960" width="300" height="80" rx="12" 
+                              fill="url(#grad-success)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="990" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Bill-Ready Güncellendi
+                        </text>
+                        <text class="node-text" x="600" y="1010" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Park Süresi: 75 dk → 72 dk
+                        </text>
+                        <text class="node-text" x="600" y="1027" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Tutar otomatik güncellendi
+                        </text>
+                    </g>
+                    
+                    <!-- Arrow 9 to 10 -->
+                    <path d="M 600 1040 L 600 1080" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead-success)" fill="none"/>
+                    
+                    <!-- Node 10: Fatura Öncesi Kontrol -->
+                    <g class="node">
+                        <rect class="node-rect" x="450" y="1080" width="300" height="80" rx="12" 
+                              fill="url(#grad-success)" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                        <text class="node-text" x="600" y="1110" text-anchor="middle" fill="white" font-size="16" font-weight="600">
+                            Fatura Öncesi Kontrol
+                        </text>
+                        <text class="node-text" x="600" y="1130" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            ✓ Veri tutarlı, fatura hazır
+                        </text>
+                        <text class="node-text" x="600" y="1147" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-size="13">
+                            Hatasız faturalama tamamlandı
+                        </text>
+                    </g>
+                    
+                    <!-- Timeline indicator -->
+                    <g>
+                        <text x="100" y="60" fill="#94a3b8" font-size="12" font-weight="600">T+0</text>
+                        <text x="100" y="180" fill="#94a3b8" font-size="12" font-weight="600">T+2m</text>
+                        <text x="100" y="290" fill="#94a3b8" font-size="12" font-weight="600">T+8m</text>
+                        <text x="100" y="410" fill="#94a3b8" font-size="12" font-weight="600">T+8m</text>
+                        <text x="100" y="520" fill="#94a3b8" font-size="12" font-weight="600">T+8m</text>
+                        <text x="100" y="640" fill="#f59e0b" font-size="12" font-weight="600">T+8m</text>
+                        <text x="100" y="760" fill="#8b5cf6" font-size="12" font-weight="600">T+15m</text>
+                        <text x="100" y="880" fill="#8b5cf6" font-size="12" font-weight="600">T+18m</text>
+                        <text x="100" y="1000" fill="#10b981" font-size="12" font-weight="600">T+18m</text>
+                        <text x="100" y="1120" fill="#10b981" font-size="12" font-weight="600">Fatura Öncesi</text>
+                    </g>
+                </svg>
+            </div>
+            
+            <!-- Legend -->
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-box legend-operational"></div>
+                    <span>Operasyonel Akış</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box legend-validation"></div>
+                    <span>Doğrulama & Kontrol</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box legend-alert"></div>
+                    <span>Uyarı (Alert)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box legend-action"></div>
+                    <span>Kullanıcı Aksiyonu</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box legend-success"></div>
+                    <span>Başarılı Tamamlama</span>
+                </div>
+            </div>
+            
+            <!-- Caption -->
+            <div class="diagram-caption">
+                <div class="caption-title">🎯 Gerçek Senaryo (ADB – İzmir Adnan Menderes Havalimanı)</div>
+                <p class="caption-text">
+                    <strong>ADB PC2038 uçuşunda</strong> AODB ile hizmet formu arasında <strong>23 dakikalık zaman farkı</strong> tespit edildi. 
+                    Sistem otomatik olarak "Time Inconsistency – High Priority" uyarısı üretti. Operasyon ekibi dashboard'dan 
+                    uyarıyı inceledi ve AODB verisi doğru olarak onaylandı (10:12). Hizmet formu verileri senkronize edildi ve 
+                    park süresi <strong>75 dakikadan 72 dakikaya düzeltildi</strong>. Yeniden fiyatlama (re-rating) otomatik 
+                    gerçekleştirildi ve bill-ready satırı güncellendi. <strong>Fatura kesilmeden önce</strong> veri tutarlılığı 
+                    sağlandı, hatasız faturalama tamamlandı. Müşteri itirazı önlendi, gelir bütünlüğü korundu.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
