@@ -13,10 +13,10 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
-            background: #f5f5f7;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             min-height: 100vh;
             padding: 2rem 1rem;
-            color: #1d1d1f;
+            color: #e2e8f0;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             opacity: 0;
@@ -35,7 +35,7 @@
         }
 
         h1 {
-            color: #1d1d1f;
+            color: #f1f5f9;
             font-size: 3rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
@@ -43,7 +43,7 @@
         }
 
         .subtitle {
-            color: #6e6e73;
+            color: #94a3b8;
             font-size: 1.25rem;
             font-weight: 400;
             letter-spacing: -0.01em;
@@ -59,48 +59,52 @@
         
         .nav-link {
             padding: 0.75rem 1.5rem;
-            background: white;
-            color: #1d1d1f;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            color: #e2e8f0;
             text-decoration: none;
             border-radius: 10px;
             font-size: 0.9375rem;
             font-weight: 500;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
-            border: 1px solid rgba(0,0,0,0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .nav-link:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            background: #007AFF;
-            color: white;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
         }
         
         .nav-link.active {
-            background: #007AFF;
-            color: white;
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+            color: #06b6d4;
         }
         
         /* PRD Section Styles */
         .prd-container {
-            background: white;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
             border-radius: 18px;
             padding: 3.5rem 3rem;
-            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
         .prd-header {
             text-align: center;
             margin-bottom: 3rem;
             padding-bottom: 2rem;
-            border-bottom: 2px solid #f5f5f7;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
         
         .prd-title {
             font-size: 2.5rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin-bottom: 0.75rem;
             letter-spacing: -0.02em;
         }
@@ -108,36 +112,36 @@
         .prd-subtitle {
             font-size: 1.75rem;
             font-weight: 500;
-            color: #007AFF;
+            color: #06b6d4;
             margin-bottom: 0.5rem;
             letter-spacing: -0.015em;
         }
         
         .prd-version {
             font-size: 0.9375rem;
-            color: #6e6e73;
+            color: #94a3b8;
             font-weight: 400;
         }
         
         .prd-purpose {
-            background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(90, 200, 250, 0.05));
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(90, 200, 250, 0.1));
             padding: 2rem;
             border-radius: 12px;
             margin-bottom: 3rem;
-            border-left: 4px solid #007AFF;
+            border-left: 4px solid #06b6d4;
         }
         
         .prd-purpose h4 {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin-bottom: 1rem;
             letter-spacing: -0.015em;
         }
         
         .prd-purpose p {
             font-size: 1rem;
-            color: #1d1d1f;
+            color: #e2e8f0;
             line-height: 1.7;
         }
         
@@ -151,15 +155,17 @@
             display: flex;
             gap: 1.5rem;
             padding: 1.75rem;
-            background: #fbfbfd;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
         }
         
         .prd-feature:hover {
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
             transform: translateX(4px);
+            border-color: rgba(255, 255, 255, 0.1);
         }
         
         .prd-feature-highlight {
@@ -171,7 +177,7 @@
             flex-shrink: 0;
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #007AFF, #5AC8FA);
+            background: linear-gradient(135deg, #06b6d4, #5AC8FA);
             color: white;
             border-radius: 12px;
             display: flex;
@@ -179,7 +185,7 @@
             justify-content: center;
             font-size: 1.25rem;
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+            box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
         }
         
         .prd-feature-content {
@@ -189,7 +195,7 @@
         .prd-feature-content h5 {
             font-size: 1.25rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin-bottom: 0.75rem;
             letter-spacing: -0.01em;
         }
@@ -197,14 +203,14 @@
         .prd-feature-content h6 {
             font-size: 1.0625rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin: 1.5rem 0 0.75rem;
             letter-spacing: -0.01em;
         }
         
         .prd-feature-content p {
             font-size: 0.9375rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.7;
             margin-bottom: 0.75rem;
         }
@@ -218,47 +224,47 @@
         .prd-feature-content ul li,
         .prd-feature-content ol li {
             font-size: 0.9375rem;
-            color: #1d1d1f;
+            color: #cbd5e1;
             line-height: 1.7;
             margin-bottom: 0.5rem;
         }
         
         .prd-value {
-            background: linear-gradient(135deg, rgba(52, 199, 89, 0.1), rgba(48, 209, 88, 0.1));
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.15), rgba(48, 209, 88, 0.15));
             padding: 0.875rem 1.25rem;
             border-radius: 8px;
             font-size: 0.875rem;
-            color: #1d1d1f;
+            color: #e2e8f0;
             font-weight: 500;
             margin-top: 1rem;
             border-left: 3px solid #34C759;
         }
         
         .prd-quote {
-            background: linear-gradient(135deg, rgba(0, 122, 255, 0.08), rgba(90, 200, 250, 0.08));
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(90, 200, 250, 0.15));
             padding: 1.25rem 1.5rem;
             border-radius: 12px;
             font-size: 1.0625rem;
-            color: #1d1d1f;
+            color: #e2e8f0;
             font-weight: 500;
             font-style: italic;
             margin: 1.5rem 0;
-            border-left: 4px solid #007AFF;
+            border-left: 4px solid #06b6d4;
             text-align: center;
         }
         
         .prd-conclusion {
-            background: linear-gradient(135deg, rgba(142, 142, 147, 0.05), rgba(199, 199, 204, 0.05));
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(245, 158, 11, 0.1));
             padding: 2.5rem;
             border-radius: 12px;
             margin-top: 3rem;
-            border: 2px solid rgba(0, 0, 0, 0.06);
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
         
         .prd-conclusion h4 {
             font-size: 1.75rem;
             font-weight: 600;
-            color: #1d1d1f;
+            color: #f1f5f9;
             margin-bottom: 1.5rem;
             letter-spacing: -0.015em;
         }
@@ -266,7 +272,7 @@
         .prd-final {
             font-size: 1.125rem;
             font-weight: 500;
-            color: #1d1d1f;
+            color: #e2e8f0;
             margin: 0;
         }
 
