@@ -433,6 +433,197 @@
         .layer-icon {
             font-size: 1.125rem;
         }
+        
+        /* Happy Path Overlay Styles */
+        :root {
+            --hp-bg: #0b1020;
+            --hp-card: #131b34;
+            --hp-text: #e7eefc;
+            --hp-muted: #9fb0c9;
+            --hp-ring: #2a3968;
+            --hp-op: #06b6d4;
+            --hp-pi: #22d3ee;
+            --hp-fin: #22c55e;
+            --hp-gov: #cbd5e1;
+            --hp-arrow: #6aa7ff;
+        }
+        
+        .hp-menu-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        
+        .hp-menu-link:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        .hp-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 8, 18, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            z-index: 9990;
+        }
+        
+        .hp-overlay[aria-hidden="false"] {
+            display: block;
+        }
+        
+        .hp-dialog {
+            position: fixed;
+            inset: 4%;
+            background: var(--hp-bg);
+            border: 1px solid var(--hp-ring);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            z-index: 9991;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hp-dialog header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--hp-ring);
+        }
+        
+        .hp-title {
+            margin: 0;
+            font-size: 18px;
+            color: var(--hp-text);
+        }
+        
+        .hp-close {
+            appearance: none;
+            border: 1px solid var(--hp-ring);
+            background: #0f1730;
+            color: var(--hp-text);
+            border-radius: 10px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+            transition: all 0.2s ease;
+        }
+        
+        .hp-close:hover {
+            background: #1a2345;
+        }
+        
+        .hp-body {
+            padding: 12px 16px;
+            overflow: auto;
+        }
+        
+        .hp-legend {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 8px 0 12px;
+        }
+        
+        .hp-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border: 1px solid var(--hp-ring);
+            border-radius: 999px;
+            background: #0f1730;
+            color: var(--hp-text);
+            font-size: 0.875rem;
+        }
+        
+        .hp-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .hp-card {
+            background: var(--hp-card);
+            border: 1px solid var(--hp-ring);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-top: 12px;
+        }
+        
+        .hp-lane-title {
+            fill: #dbeafe;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .hp-node {
+            cursor: default;
+        }
+        
+        .hp-node rect {
+            rx: 14;
+            ry: 14;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+        }
+        
+        .hp-node text {
+            font-size: 12px;
+            fill: white;
+        }
+        
+        .hp-tt {
+            position: fixed;
+            pointer-events: none;
+            background: #0f1730;
+            border: 1px solid var(--hp-ring);
+            border-radius: 10px;
+            padding: 8px 10px;
+            color: var(--hp-text);
+            font-size: 12px;
+            opacity: 0;
+            transform: translate(-50%, -120%);
+            transition: opacity 0.15s;
+            z-index: 9992;
+        }
+        
+        .hp-kpis {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .hp-kpi {
+            background: #0f1730;
+            border: 1px solid var(--hp-ring);
+            border-radius: 12px;
+            padding: 12px;
+        }
+        
+        .hp-kpi b {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 2px;
+            color: var(--hp-text);
+        }
+        
+        .hp-kpi span {
+            color: var(--hp-muted);
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 900px) {
+            .hp-kpis {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hp-dialog {
+                inset: 2%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -445,6 +636,7 @@
                 <a href="prd.html" class="nav-link">📄 Product Requirements</a>
                 <a href="proactive-vs-leakage.html" class="nav-link">⚡ Proactive vs. Leakage</a>
                 <a href="proactive_alerts_flow.html" class="nav-link" title="Proactive Alerts süreç akış diyagramını görüntüle">🧭 Proactive Alerts Akış</a>
+                <a href="#" class="nav-link hp-menu-link" id="hp-open" title="Aeronautical Billing — Happy Path">🧭 <span>Happy Path Akış</span></a>
             </div>
         </header>
 
@@ -1913,6 +2105,262 @@
             initModal();
         }
         
+    })();
+    </script>
+    
+    <!-- Happy Path Overlay -->
+    <div class="hp-overlay" id="hp-overlay" aria-hidden="true">
+        <div class="hp-dialog" role="dialog" aria-modal="true" aria-labelledby="hp-title" aria-describedby="hp-desc">
+            <header>
+                <h2 id="hp-title" class="hp-title">Aeronautical Billing — Happy Path (ADB Örneği)</h2>
+                <button class="hp-close" id="hp-close" aria-label="Kapat">×</button>
+            </header>
+            <div class="hp-body">
+                <p id="hp-desc" style="margin: 0.25rem 0; color: var(--hp-muted); font-size: 0.9375rem;">
+                    Operasyondan fatura kesimine kadar ideal akış — gerçek zamanlı hesaplama, dönemsel faturalama ve tam audit uyumu.
+                </p>
+
+                <div class="hp-legend">
+                    <span class="hp-chip"><span class="hp-dot" style="background: var(--hp-op)"></span>Operational</span>
+                    <span class="hp-chip"><span class="hp-dot" style="background: var(--hp-pi)"></span>Processing & Intelligence</span>
+                    <span class="hp-chip"><span class="hp-dot" style="background: var(--hp-fin)"></span>Financial</span>
+                    <span class="hp-chip"><span class="hp-dot" style="background: var(--hp-gov)"></span>Engagement & Governance</span>
+                </div>
+
+                <!-- Diagram -->
+                <div class="hp-card">
+                    <svg viewBox="0 0 1400 720" width="100%" role="img" aria-label="Aeronautical Billing Happy Path Swimlane Diyagramı">
+                        <defs>
+                            <marker id="hp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                                <path d="M 0 0 L 10 5 L 0 10 z" fill="#6aa7ff"></path>
+                            </marker>
+                            <linearGradient id="hp-gOp" x1="0" x2="1"><stop offset="0" stop-color="#0ea5e9"/><stop offset="1" stop-color="#06b6d4"/></linearGradient>
+                            <linearGradient id="hp-gPI" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#06b6d4"/></linearGradient>
+                            <linearGradient id="hp-gFin" x1="0" x2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#22c55e"/></linearGradient>
+                            <linearGradient id="hp-gGov" x1="0" x2="1"><stop offset="0" stop-color="#e2e8f0"/><stop offset="1" stop-color="#cbd5e1"/></linearGradient>
+                        </defs>
+
+                        <!-- Lanes -->
+                        <g opacity="0.12">
+                            <rect x="0" y="20" width="1400" height="150" fill="#06b6d4"/>
+                            <rect x="0" y="190" width="1400" height="150" fill="#22d3ee"/>
+                            <rect x="0" y="360" width="1400" height="150" fill="#22c55e"/>
+                            <rect x="0" y="530" width="1400" height="150" fill="#cbd5e1"/>
+                        </g>
+
+                        <!-- Lane titles -->
+                        <text x="16" y="40" class="hp-lane-title">Operational</text>
+                        <text x="16" y="210" class="hp-lane-title">Processing & Intelligence</text>
+                        <text x="16" y="380" class="hp-lane-title">Financial</text>
+                        <text x="16" y="550" class="hp-lane-title">Engagement & Governance</text>
+
+                        <!-- Nodes -->
+                        <!-- Operational -->
+                        <g class="hp-node" data-title="Uçuş Oluştu (AODB)" data-desc="ADB'de uçuş planı ve on/off-block zamanları sisteme düştü.">
+                            <rect x="120" y="70" width="220" height="60" fill="url(#hp-gOp)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="230" y="102" text-anchor="middle">Uçuş Oluştu (AODB)</text>
+                        </g>
+                        <g class="hp-node" data-title="Servisler Otomatik Atandı" data-desc="Uçuş tipine göre GPU, pushback, temizlik vb. otomatik atandı.">
+                            <rect x="380" y="70" width="240" height="60" fill="url(#hp-gOp)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="500" y="102" text-anchor="middle">Servisler Otomatik Atandı</text>
+                        </g>
+                        <g class="hp-node" data-title="Mobil Servis Girişi" data-desc="Saha ekipleri hizmetleri mobil formdan kapattı; süre/miktar sisteme aktı.">
+                            <rect x="660" y="70" width="220" height="60" fill="url(#hp-gOp)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="770" y="102" text-anchor="middle">Mobil Servis Girişi</text>
+                        </g>
+
+                        <!-- Processing & Intelligence -->
+                        <g class="hp-node" data-title="Gerçek Zamanlı Rating (Bill-Ready)" data-desc="On-block, MTOW ve hizmet bilgileriyle satırlar anında hesaplandı.">
+                            <rect x="120" y="240" width="260" height="60" fill="url(#hp-gPI)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="250" y="272" text-anchor="middle">Gerçek Zamanlı Rating</text>
+                        </g>
+                        <g class="hp-node" data-title="Tarife Uygulaması (Versiyonlu)" data-desc="Geçerli tarife sürümü otomatik seçildi (örn. 1 Mart sonrası yeni tarife).">
+                            <rect x="420" y="240" width="260" height="60" fill="url(#hp-gPI)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="550" y="272" text-anchor="middle">Tarife Uygulaması</text>
+                        </g>
+                        <g class="hp-node" data-title="Kampanya/Teşvik Uygulandı" data-desc="Koşullar sağlandığı için otomatik indirim/teşvik eklendi.">
+                            <rect x="720" y="240" width="240" height="60" fill="url(#hp-gPI)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="840" y="272" text-anchor="middle">Kampanya/Teşvik</text>
+                        </g>
+                        <g class="hp-node" data-title="Temel Doğrulamalar Geçti" data-desc="Süre/MTOW/dup-check vb. kontroller temiz; uyarı yok.">
+                            <rect x="1000" y="240" width="240" height="60" fill="url(#hp-gPI)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="1120" y="272" text-anchor="middle">Doğrulamalar Geçti</text>
+                        </g>
+
+                        <!-- Financial -->
+                        <g class="hp-node" data-title="Gün İçi Gelir Panosu Güncellendi" data-desc="Bill-ready satırlar anlık görünür; mali kapanış beklenmez.">
+                            <rect x="120" y="410" width="260" height="60" fill="url(#hp-gFin)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="250" y="442" text-anchor="middle">Gün İçi Gelir Panosu</text>
+                        </g>
+                        <g class="hp-node" data-title="Pre-Invoice Validation (Dönem Sonu)" data-desc="Dönem sonunda son kontroller; eksik/çelişki yok → onay.">
+                            <rect x="420" y="410" width="260" height="60" fill="url(#hp-gFin)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="550" y="442" text-anchor="middle">Pre-Invoice Validation</text>
+                        </g>
+                        <g class="hp-node" data-title="Fatura Verisi Kilitlendi (Billing-Locked)" data-desc="Final fatura üretimine giren veriler kilitlendi (audit korunur).">
+                            <rect x="720" y="410" width="260" height="60" fill="url(#hp-gFin)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="850" y="442" text-anchor="middle">Billing-Locked</text>
+                        </g>
+                        <g class="hp-node" data-title="Final Fatura & IATA SIS" data-desc="Basılı/e-fatura oluşturuldu; gerekiyorsa IATA SIS'e iletildi.">
+                            <rect x="1020" y="410" width="240" height="60" fill="url(#hp-gFin)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="1140" y="442" text-anchor="middle">Final Fatura</text>
+                        </g>
+
+                        <!-- Engagement & Governance -->
+                        <g class="hp-node" data-title="Web Portal'da Görünürlük" data-desc="Havayolu portalda taslak/final fatura ve satırları görür.">
+                            <rect x="120" y="580" width="240" height="60" fill="url(#hp-gGov)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="240" y="612" text-anchor="middle" fill="#0b1020">Web Portal</text>
+                        </g>
+                        <g class="hp-node" data-title="Proaktif Bildirimler (Bilgi)" data-desc="'Dönem kapanışı tamamlandı, fatura oluşturuldu' gibi bilgi amaçlı uyarılar.">
+                            <rect x="420" y="580" width="240" height="60" fill="url(#hp-gGov)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="540" y="612" text-anchor="middle" fill="#0b1020">Proaktif Bildirimler</text>
+                        </g>
+                        <g class="hp-node" data-title="Audit Trail & Raporlama" data-desc="Tüm adımlar kullanıcı/alan/zaman bazında kaydedildi; raporlanabilir.">
+                            <rect x="720" y="580" width="240" height="60" fill="url(#hp-gGov)" stroke="rgba(255,255,255,0.2)"/>
+                            <text x="840" y="612" text-anchor="middle" fill="#0b1020">Audit Trail</text>
+                        </g>
+
+                        <!-- Arrows -->
+                        <g stroke="#6aa7ff" stroke-width="2.5" fill="none" marker-end="url(#hp-arrow)" opacity="0.9">
+                            <!-- Operational chain -->
+                            <path d="M340,100 L380,100"/>
+                            <path d="M620,100 L660,100"/>
+                            <!-- down to PI -->
+                            <path d="M770,130 L770,240"/>
+                            <!-- PI chain -->
+                            <path d="M380,270 L420,270"/>
+                            <path d="M680,270 L720,270"/>
+                            <path d="M960,270 L1000,270"/>
+                            <!-- down to Financial -->
+                            <path d="M1120,300 L1120,410"/>
+                            <!-- Financial chain -->
+                            <path d="M380,440 L420,440"/>
+                            <path d="M680,440 L720,440"/>
+                            <path d="M980,440 L1020,440"/>
+                            <!-- down to Engagement -->
+                            <path d="M1140,470 L1140,580"/>
+                            <!-- Engagement chain -->
+                            <path d="M360,610 L420,610"/>
+                            <path d="M660,610 L720,610"/>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Timeline & KPIs -->
+                <div class="hp-card">
+                    <h3 style="margin: 4px 0 12px; color: var(--hp-text);">Zaman Çizgisi & KPI'lar</h3>
+                    <p style="margin-top: 0; color: var(--hp-muted); font-size: 0.9375rem;">
+                        T0: Uçuş oluştu → T0+45dk: Hizmetler kapandı → Anlık: Bill-ready görünür → Dönem sonu: Pre-invoice validation → D+1: Final fatura
+                    </p>
+                    <div class="hp-kpis">
+                        <div class="hp-kpi">
+                            <b>~8 dk</b>
+                            <span>Ortalama bill-ready süresi</span>
+                        </div>
+                        <div class="hp-kpi">
+                            <b>&lt;0.1%</b>
+                            <span>Hata oranı</span>
+                        </div>
+                        <div class="hp-kpi">
+                            <b>100%</b>
+                            <span>Audit coverage</span>
+                        </div>
+                        <div class="hp-kpi">
+                            <b>+40%</b>
+                            <span>Mali kapanış hızı</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scenario Card -->
+                <div class="hp-card">
+                    <h3 style="margin: 4px 0 8px; color: var(--hp-text);">🎯 Gerçek Senaryo (ADB)</h3>
+                    <p style="color: var(--hp-muted); font-size: 0.9375rem; line-height: 1.6;">
+                        <strong style="color: var(--hp-text);">PC2038 (İzmir–İstanbul)</strong> uçuşu on-block olduğu anda (10:12), 
+                        sistem AODB'den alınan MTOW (78t) ve park süresine (72 dk) göre iniş ve park ücretlerini anında hesapladı. 
+                        Saha ekipleri GPU ve pushback hizmetlerini mobil formdan kapattığında (T+8dk), hizmet kalemleri de bill-ready 
+                        satırlara eklendi. Geçerli tarife versiyonu (1 Mart 2025) otomatik uygulandı ve şirketin yıllık %3 teşvik 
+                        kampanyası devreye girdi. Temel doğrulamalar (süre/MTOW/dup-check) temiz geçti; hiçbir proaktif uyarı 
+                        tetiklenmedi. Mali ekip gün içi gelir panosunda tüm satırları canlı izledi. Dönem sonunda pre-invoice 
+                        validation çalıştı; eksik/çelişki olmadığı için veriler billing-locked statüsüne alındı. Final fatura D+1'de 
+                        basıldı ve IATA SIS formatında havayoluna iletildi. Havayolu web portaldan tüm detayları görüp onayladı. 
+                        Sistem audit trail'e tüm işlemleri kaydetti; manuel müdahale gerekmedi. 
+                        <strong style="color: var(--hp-text);">Süreç baştan sona sorunsuz tamamlandı — Happy Path.</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tooltip element -->
+    <div id="hp-tooltip" class="hp-tt"></div>
+    
+    <script>
+    (function() {
+        // Happy Path Overlay Logic
+        const openBtn = document.getElementById('hp-open');
+        const closeBtn = document.getElementById('hp-close');
+        const overlay = document.getElementById('hp-overlay');
+        const tooltip = document.getElementById('hp-tooltip');
+        const nodes = document.querySelectorAll('.hp-node');
+        
+        function openOverlay(e) {
+            e.preventDefault();
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+            closeBtn.focus();
+        }
+        
+        function closeOverlay() {
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+            openBtn.focus();
+        }
+        
+        // Event listeners
+        if (openBtn) {
+            openBtn.addEventListener('click', openOverlay);
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeOverlay);
+        }
+        
+        // Close on overlay click (outside dialog)
+        if (overlay) {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === overlay) {
+                    closeOverlay();
+                }
+            });
+        }
+        
+        // Close on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.getAttribute('aria-hidden') === 'false') {
+                closeOverlay();
+            }
+        });
+        
+        // Tooltip for nodes
+        nodes.forEach(node => {
+            node.addEventListener('mouseenter', function(e) {
+                const title = this.getAttribute('data-title');
+                const desc = this.getAttribute('data-desc');
+                if (title && desc) {
+                    tooltip.innerHTML = `<strong>${title}</strong><br>${desc}`;
+                    tooltip.style.opacity = '1';
+                }
+            });
+            
+            node.addEventListener('mousemove', function(e) {
+                tooltip.style.left = e.clientX + 'px';
+                tooltip.style.top = e.clientY + 'px';
+            });
+            
+            node.addEventListener('mouseleave', function() {
+                tooltip.style.opacity = '0';
+            });
+        });
     })();
     </script>
 </body>
