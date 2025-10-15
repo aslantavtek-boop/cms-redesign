@@ -2074,7 +2074,13 @@
                         return;
                     }
                     
-                    const titleText = titleElement.textContent.trim();
+                    // Remove priority badge from title text for matching
+                    let titleText = titleElement.textContent.trim();
+                    const priorityBadge = titleElement.querySelector('.priority-badge');
+                    if (priorityBadge) {
+                        titleText = titleText.replace(priorityBadge.textContent.trim(), '').trim();
+                    }
+                    
                     const moduleKey = titleToKey[titleText];
                     
                     if (!moduleKey || !moduleData[moduleKey]) {
