@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeronautical Billing System - Epics & Stories</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #e2e8f0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            color: #f1f5f9;
+            font-size: 3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1.25rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+        }
+        
+        .header-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            color: #e2e8f0;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+        }
+        
+        .nav-link.active {
+            background: rgba(6, 182, 212, 0.3);
+            border-color: #06b6d4;
+            color: #06b6d4;
+        }
+
+        .content {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .epics-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .epic-card {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .epic-card:hover {
+            border-color: rgba(6, 182, 212, 0.5);
+            box-shadow: 0 4px 16px rgba(6, 182, 212, 0.2);
+        }
+
+        .epic-header {
+            padding: 1.5rem 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s ease;
+            user-select: none;
+        }
+
+        .epic-header:hover {
+            background: rgba(6, 182, 212, 0.1);
+        }
+
+        .epic-title-section {
+            flex: 1;
+        }
+
+        .epic-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .epic-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+
+        .epic-description {
+            font-size: 0.9375rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .epic-toggle {
+            font-size: 1.5rem;
+            color: #06b6d4;
+            transition: transform 0.3s ease;
+        }
+
+        .epic-card.expanded .epic-toggle {
+            transform: rotate(180deg);
+        }
+
+        .stories-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 2rem;
+        }
+
+        .epic-card.expanded .stories-container {
+            max-height: 3000px;
+            padding: 0 2rem 1.5rem 2rem;
+        }
+
+        .story-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #06b6d4;
+            transition: all 0.3s ease;
+        }
+
+        .story-item:hover {
+            transform: translateX(8px);
+            background: rgba(30, 41, 59, 0.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .story-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .story-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .story-number {
+            background: rgba(6, 182, 212, 0.2);
+            color: #06b6d4;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .story-description {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #94a3b8;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .header-nav {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .content {
+                padding: 2rem 1.5rem;
+            }
+
+            .epic-header {
+                padding: 1rem 1.5rem;
+            }
+
+            .epic-title {
+                font-size: 1.25rem;
+            }
+
+            .stories-container {
+                padding: 0 1.5rem;
+            }
+
+            .epic-card.expanded .stories-container {
+                padding: 0 1.5rem 1.5rem 1.5rem;
+            }
+
+            .story-item {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Aeronautical Billing System</h1>
+            <p class="subtitle">Epics & User Stories</p>
+            <div class="header-nav">
+                <a href="aeronautical-billing-dashboard.html" class="nav-link">📊 Business Flow Dashboard</a>
+                <a href="prd.html" class="nav-link">📄 Product Requirements</a>
+                <a href="proactive-vs-leakage.html" class="nav-link">⚡ Proactive vs. Leakage</a>
+                <a href="proactive_alerts_flow.html" class="nav-link">🧭 Proactive Alerts Akış</a>
+                <a href="epics.html" class="nav-link active">📋 Epics & Stories</a>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="epics-container" id="epicsContainer">
+                <!-- Epics will be loaded here dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Epic and Story data structure
+        const epicsData = [
+            {
+                id: 1,
+                title: "EPIC 1 — Service Definition Module (Servis Tanımlama Modülü)",
+                description: "Bu modül; havalimanında kullanılacak tüm servislerin ne olduğunu, nasıl ölçüldüğünü ve nasıl fiyatlandığını tanımlar. Servisin hangi uçuşa ne zaman ve hangi koşulda atanacağı bu modülün konusu değildir.",
+                stories: [
+                    {
+                        id: "1.1",
+                        title: "Servisin Temel Tanımı",
+                        description: "As a Billing Admin, I want to define service master data so that services can be consistently used across billing and operations. AC: Servis adı (çok dilli), açıklama, aktif/pasif durumu, ücretli işareti, dinamik Service Group, servis kategorisi (Arrival/Departure/Turnaround/All) tanımlanabilir."
+                    },
+                    {
+                        id: "1.2",
+                        title: "Dinamik Service Group Yönetimi",
+                        description: "As a Billing Admin, I want to manage service groups dynamically so that services can be categorized per airport needs. AC: Yeni grup eklenebilir, grup adı/açıklama (çok dilli) girilebilir, grup aktif/pasif yapılabilir, pasif gruplar görünmez, servisler gruplara bağlanabilir."
+                    },
+                    {
+                        id: "1.3",
+                        title: "Measurement Type Tanımı",
+                        description: "As a Billing Admin, I want to define the measurement type so that the system knows how the service is measured. Measurement Types: TIME, QUANTITY, LOAD-BASED, MTOW-BASED, EVENT, AGGREGATED. AC: Measurement type seçildiğinde ilgili alanlar dinamik açılır, gereksiz alanlar gizlenir."
+                    },
+                    {
+                        id: "1.4",
+                        title: "TIME-Based Servis Konfigürasyonu",
+                        description: "As a Billing Admin, I want to configure time attributes so that duration-based services can be calculated correctly. AC: Start event (ATA, ATD, AIBT, AOBT, ETA, ETD, Boarding) ve offset, End event ve offset, Calculation Method (Fixed/Actual Data/Dynamic Formula Engine) seçilebilir."
+                    },
+                    {
+                        id: "1.5",
+                        title: "QUANTITY / LOAD / MTOW Servis Konfigürasyonu",
+                        description: "As a Billing Admin, I want to configure quantity and load-based services so that passenger, baggage, cargo or weight-based services are billed properly. AC: Pax kaynakları (In, Out, Transfer, Transit, Infant, Crew), Load alanları (cargo weight, mail), MTOW alanı seçilebilir, Dynamic Calculation Method ile formül yazılabilir, sistem quantity/load preview gösterir."
+                    },
+                    {
+                        id: "1.6",
+                        title: "EVENT-Based Servis Konfigürasyonu",
+                        description: "As a Billing Admin, I want to define event trigger so that the service is billed once when the event occurs. AC: Event listesi gösterilir, tek event seçilir, event gerçekleşince servis 'executed' olur, Dynamic Calculation Method seçilirse formül yazılabilir."
+                    },
+                    {
+                        id: "1.7",
+                        title: "AGGREGATED (Package) Servis Tanımlama",
+                        description: "As a Billing Admin, I want to define aggregated service packages so that multiple services can be billed as one. AC: Child services seçilebilir, Parent hesaplama modeli (SUM/FIXED/Dynamic formula) seçilebilir, child servisler operasyonel olarak çalışmaya devam eder, tüm child servisler tamamlanmadan parent servis gönderilemez."
+                    },
+                    {
+                        id: "1.8",
+                        title: "Equipment & Resource Gereksinimi",
+                        description: "As a Billing Admin, I want to define equipment and resource dependencies so that usage-driven services are validated. AC: Equipment required işaretlenebilir, Equipment type (GPU, PCA, 400Hz, Bus…), Resource type (Stand, Gate, Counter), Sub-type (Bridge, Remote…) seçilebilir."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "EPIC 2 — Service Provider Management",
+                description: "Bu modül servislerin hangi sağlayıcı tarafından verildiğini yönetir.",
+                stories: [
+                    {
+                        id: "2.1",
+                        title: "Service Provider Definition",
+                        description: "As a Billing Admin, I want to define providers so that services can be assigned to operational entities. AC: Servis sağlayıcı adı (çok dilli) girilebilir, sağlayıcı tipi (Airport, GH, Airline, Vendor) seçilir, aktif/pasif yapılabilir."
+                    },
+                    {
+                        id: "2.2",
+                        title: "Provider Assignment",
+                        description: "As a Billing Admin, I want to assign providers to services so that billing ownership is clear. AC: Bir servise birden fazla provider atanabilir, default provider seçilebilir."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "EPIC 3 — Dynamic Calculation Formula Engine",
+                description: "Bu modül 'Calculation Method = Dynamic' olduğunda tüm servis tipleri için çalışır.",
+                stories: [
+                    {
+                        id: "3.1",
+                        title: "Unified Formula Editor",
+                        description: "As a Billing Admin, I want to write formulas so that services can be calculated dynamically. AC: Formül TIME, QUANTITY, LOAD, MTOW, EVENT, AGGREGATED için geçerlidir, flight/pax/service/equipment/resource alanları kullanılabilir, syntax validation yapılır, preview sonucu gösterilir."
+                    },
+                    {
+                        id: "3.2",
+                        title: "Formula Variable Dictionary",
+                        description: "As a Billing Admin, I want to view available variables so that I can build correct formulas. AC: flight.*, pax.*, service.*, equipment.*, resource.* alanları listelenir."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "EPIC 4 — Service Assignment Rule Engine",
+                description: "Bu modül servislerin hangi uçuşlara otomatik alınacağını ve hangi durumlarda devre dışı kalacağını yönetir.",
+                stories: [
+                    {
+                        id: "4.1",
+                        title: "Restriction Rules (Applicable / Not Applicable)",
+                        description: "As a Billing Admin, I want to define restriction rules so that invalid services are prevented. AC: Flight attribute seçilir, operator (=, !=, >, in, not in) seçilir, value girilir, rule sonucu Applicable/Not Applicable, AND/OR desteklenir."
+                    },
+                    {
+                        id: "4.2",
+                        title: "Condition-Based Auto Assignment",
+                        description: "As a Billing Admin, I want to define auto-assign rules so that services are created automatically. AC: Attribute + operator + value ile rule yazılır, koşul sağlanırsa servis eklenir."
+                    },
+                    {
+                        id: "4.3",
+                        title: "Timing Rules (Planned Start/End)",
+                        description: "As a Billing Admin, I want to define planned timing so that service times are calculated dynamically. AC: Event + offset yazılabilir, dynamic duration hesaplanabilir."
+                    },
+                    {
+                        id: "4.4",
+                        title: "Flight Data Triggered Auto Service Assignment",
+                        description: "As a Billing Admin, I want to assign services based on flight data entry so that services are created when operational data is entered. AC: Tetikleyiciler desteklenir (Passenger data → Passenger Services, Counter assignment → Counter Usage, Gate → Gate Usage, Stand → Parking, Load data → Baggage/Cargo, Equipment usage → GPU/PCA, Boarding → Boarding Services), veri silinirse servis kaldırılır, duplicate oluşmaz, audit log'a girer."
+                    },
+                    {
+                        id: "4.5",
+                        title: "Manual Service Assignment via Web",
+                        description: "As a Billing Operator, I want to manually add services to a flight from the web application so that missing or exceptional services can be created by operations staff. AC: Web'de 'Add Service' butonu, sistemdeki tüm servisler listeden seçilebilir, measurement type/provider/planned time otomatik yüklenir, kullanıcı quantity/actual time/equipment/provider düzenleyebilir, restriction rule kontrolü yapılır (override edilebilir), duplicate engellenir, audit log'a 'Manually added via web by user X at time Y' kaydedilir."
+                    },
+                    {
+                        id: "4.6",
+                        title: "Manual Service Assignment via Mobile",
+                        description: "As a Ground Operations Staff, I want to manually add services via mobile application so that services can be recorded instantly on the field. AC: Mobil uçuş detay ekranında 'Add Service' bulunur, servis listesi mobil uyumlu, kullanıcı service type/equipment/actual start-end/quantity girebilir, sistem provider/planned time/default settings otomatik doldurur, offline senaryo desteklenir (local cache + sync), mobile entry işaretlenir (Source = Mobile App), duplicate kontrolü, exception uyarıları."
+                    }
+                ]
+            },
+            {
+                id: 5,
+                title: "EPIC 5 — Flight & Service Validations (Billing Awareness & Control Layer)",
+                description: "Bu EPIC; Billing sisteminin AODB'den gelen uçuş verilerini değiştirmeden, yalnızca kontrol etmesini, uyarmasını ve görünür kılmasını sağlar. Billing sistemi flight verisini düzeltmez/bloklamaz, sadece problem tespit eder. Service tarafında ise error/warning ayrımı yapılır ve blocking kurallar olabilir.",
+                stories: [
+                    {
+                        id: "5.1",
+                        title: "Flight Data Awareness Rules (WARNING Only)",
+                        description: "As a Billing User, I want to see warnings about problematic flight data coming from AODB so that I am aware of potential billing risks. AC: Billing sistemi ETA/ETD, ATA/ATD, AIBT/AOBT, Aircraft Type, Stand/Gate, Pax/Load, MTOW, Flight Category, Airline alanlarını kontrol edebilir. ÖNEMLI: Flight validations MUST ALWAYS RESULT IN WARNING only (no blocking, no rejection, no modification). Örnek kurallar: IF AOBT < AIBT THEN Warning, IF PaxOut > AircraftCapacity THEN Warning. Kullanıcı uyarılır, ek aksiyon engellenmez, uyarılar dashboard'a düşer, kayıtlar bloklanmaz."
+                    },
+                    {
+                        id: "5.2",
+                        title: "Service Usage Validations (ERROR + WARNING)",
+                        description: "As a Billing Admin, I want to validate service usage entries so that wrong billing records can be prevented. AC: Service tarafında Error (IF Service.EndTime > AOBT, IF Same Service added twice, IF Event-based Service triggered twice) ve Warning (IF GPU.StartTime < ATA, IF Service.StartTime unusually long) oluşturabilir. Davranış: Warning → Bildirim, iade edilmez | Error → Servis kaydı engellenir."
+                    },
+                    {
+                        id: "5.3",
+                        title: "Station-Based Validation Configuration",
+                        description: "As a Billing Admin, I want to manage validations per airport so that each station can apply its local business logic. AC: Her airport için ayrı validation seti olabilir, global validation + station override çalışır, station kuralı kapatabilir/yeni kural ekleyebilir/severity değiştirebilir."
+                    },
+                    {
+                        id: "5.4",
+                        title: "Validation Dashboard (Alert Grid)",
+                        description: "As a Billing User, I want to see all validation problems in one place so that I can detect risk before invoicing. AC: Grid alanları (Airport, Flight No, Date, Validation Type, Service Name, Severity, Message, Field, Detected Time, Source, Status). Filtreler: Airport, Severity, Date, Service Type, Rule Type. Aksiyonlar: Go to Flight, Go to Service, Mark as Acknowledged/Ignored, Export (Excel/PDF)."
+                    },
+                    {
+                        id: "5.5",
+                        title: "Alert & Notification",
+                        description: "As a Billing Supervisor, I want to receive alerts for service-related errors so that billing risks are not missed. AC: Flight WARNING → sadece dashboard, Service ERROR → UI Alert + Email/push (opsiyonel), severity'ye göre kanal değişir."
+                    },
+                    {
+                        id: "5.6",
+                        title: "Validation Rule Management",
+                        description: "As a Billing Admin, I want to define validation rules dynamically so that no code change is needed for new controls. AC: Rule Builder desteklenir (Attribute, Operator, Value, Severity), Rule: Flight için → sadece Warning, Service için → Warning/Error olabilir, rule test edilebilir, versiyonlama yapılır, audit log tutulur."
+                    }
+                ]
+            },
+            {
+                id: 6,
+                title: "EPIC 6 — Near Real-Time Billing Charging & Flight Readiness Management",
+                description: "Bu EPIC'in amacı: Uçuş operasyonu bittiğinde ücretlendirme sürecini başlatmak, müşteri ve servis bazında otomatik/manuel akışları yönetmek, gecikmeli tetiklemeyi desteklemek, uçuşu 'billing-ready' duruma almak, ERP'ye gidecek kayıtları güvenli hale getirmek. Billing sistemi şunu yönetir: 'Bu uçuş ne zaman ücretlendirilmeli ve ne zaman ERP'ye gönderilmeli?'",
+                stories: [
+                    {
+                        id: "6.1",
+                        title: "Customer & Service Based Charging Mode Configuration",
+                        description: "As a Billing Admin, I want to configure charging mode per customer and per service so that billing process can be automatic or manual depending on contract. AC: Her müşteri için Charging Mode (AUTO/MANUAL) seçilebilir, her servis için charging mode override edilebilir, öncelik kuralı: Service-level config > Customer-level config. Örn: Airline A için her şey otomatik, Deicing manuel olabilir."
+                    },
+                    {
+                        id: "6.2",
+                        title: "Configurable Auto-Charging Trigger Time",
+                        description: "As a Billing Admin, I want to define when auto-charging should start so that billing can be delayed if required. AC: Otomatik akış seçildiyse charging tetikleme zamanı konfigüre edilebilir (T0 = Operation completed, T + X minutes/hours/days). Trigger başlangıcı event'lere bağlanabilir: AOBT reached, Last mandatory service completed, Aggregated service completed, Custom rule event (Rule Engine)."
+                    },
+                    {
+                        id: "6.3",
+                        title: "Manual Charging Trigger (Customer Override)",
+                        description: "As a Billing User, I want to manually start charging for a flight so that I do not wait for the auto schedule. AC: UI'da 'Start Billing' butonu bulunur, kullanıcı manuel olarak süreci tetikleyebilir, manuel tetikleme audit log'a düşer, manuel tetikleme otomatik schedule'i override eder."
+                    },
+                    {
+                        id: "6.4",
+                        title: "Partial Success Handling (Service-Level)",
+                        description: "As a Billing System, I want to allow partial success on invoice preparation so that valid services are not blocked due to individual failures. AC: Otomatik süreç çalıştığında her servis bağımsız işlenir, hata alan servisler ERROR statüsünde kalır, başarılı servisler READY FOR BILLING işaretlenir. KURAL: Aggregated services hariç, bir paketin child servislerinden biri hatalıysa → parent servis 'FAILED' olur."
+                    },
+                    {
+                        id: "6.5",
+                        title: "Flight-Level Readiness & ERP Blocking Rule",
+                        description: "As a Billing System, I want to prevent ERP export until flight is fully completed so that incomplete billings are not sent. AC: UÇUŞ bazında tüm mandatory services tamamlanmadan ERP'ye gönderim yapılmaz, servis seviyesinde hatalı olmayan servisler billing state alır. Flight state = 'READY FOR ERP' olması için: Hiç ERROR statüsünde servis kalmamalı, aggregated servislerin tamamı tamamlanmış olmalı."
+                    },
+                    {
+                        id: "6.6",
+                        title: "Auto Recalculation Until Lock",
+                        description: "As a Billing System, I want to recalculate billing until flight is locked so that latest data is always used. AC: Lock öncesinde yeni servis girilirse veya değer değişirse → otomatik recalculation yapılır. Lock sonrası değişiklik için manuel unlock gerekir."
+                    },
+                    {
+                        id: "6.7",
+                        title: "Charging Status & Monitoring Panel",
+                        description: "As a Billing User, I want to monitor charging progress so that I can see where billing is stuck."
+                    }
+                ]
+            },
+            {
+                id: 7,
+                title: "EPIC 7 — Leakage Detection & Revenue Protection",
+                description: "Detect unbilled services, data inconsistencies, and behavioral anomalies using historical patterns, live data, and external evidence to prevent revenue leakage. Bu modül faturayı bloklamaz, ERP akışını durdurmaz, ancak risk üretir, görünür kılar ve kanıt sunar.",
+                stories: [
+                    {
+                        id: "7.1",
+                        title: "Similar Flight Pattern Detection",
+                        description: "As a Leakage Analytics Engine, I want to identify flights with similar operational profiles so that missing services can be detected statistically. AC: Benzerlik kriterleri (Airline, Aircraft, Route, Time Window, Stand), sistem peer flight set üretir, servis olasılık yüzdeleri çıkarılır, high-probability servis yoksa 'expected service missing' üretilir."
+                    },
+                    {
+                        id: "7.2",
+                        title: "Service Sequence Integrity",
+                        description: "As a Leakage Engine, I want to learn execution order patterns so that broken operational chains are detected. AC: Tipik uçuş zinciri modellenir, ara halka yoksa anomaly score yükselir."
+                    },
+                    {
+                        id: "7.3",
+                        title: "Behavioral Baseline Modeling",
+                        description: "As a Leakage Engine, I want to learn historical service ratios so that expected behavior is known. AC: Airline + Aircraft Type bazlı service probability profili, %90+ expected service missing → risk üretir."
+                    },
+                    {
+                        id: "7.4",
+                        title: "Turnaround Duration Analysis",
+                        description: "As a Leakage System, I want to analyze parking time so that time-based service necessity is evaluated. AC: AIBT–AOBT hesaplanır, threshold aşılırsa risk artar."
+                    },
+                    {
+                        id: "7.5",
+                        title: "FlightRadar24 Validation",
+                        description: "As a Leakage Engine, I want to validate aircraft behavior using FR24 so that system data is confirmed. AC: FR24 API entegrasyonu, parking/time mismatch → confidence score yükselir."
+                    },
+                    {
+                        id: "7.6",
+                        title: "Confidence Scoring Engine",
+                        description: "As a Leakage Detection System, I want to compute confidence scores so that alerts are classified. AC: Multiple signal → total score, levels: LOW / MEDIUM / HIGH."
+                    },
+                    {
+                        id: "7.7",
+                        title: "Leakage Monitoring Dashboard",
+                        description: "As a Billing User, I want to see leakage alerts so that investigation is easy. AC: Dashboard kolonları: Flight, Missing Service, Score, Explanation, FR24 Match, Status."
+                    },
+                    {
+                        id: "7.8",
+                        title: "Risk Scoring Rule Management",
+                        description: "As a Billing Admin, I want to configure scoring logic so that alert sensitivity is controlled. AC: Weight ayarları, threshold değerleri, Airline / Airport override."
+                    },
+                    {
+                        id: "7.9",
+                        title: "Feedback & Learning Loop",
+                        description: "As a Leakage System, I want to learn from user actions so that accuracy improves. AC: False positive oranı düşürülür, weights auto-tune edilir."
+                    },
+                    {
+                        id: "7.10",
+                        title: "Audit & Evidence Traceability",
+                        description: "As an Auditor, I want to see anomaly rationale so that decisions are defendable. AC: Rule match logs, FR24 snapshot, peer group list."
+                    },
+                    {
+                        id: "7.11",
+                        title: "Cross-Source Reconciliation & Dashboard",
+                        description: "As a Billing User, I want to compare data from multiple sources so that inconsistencies become visible. AC: Kıyaslanan alanlar (Pax, Load, Weight, Fuel, Times), fark Absolute/Percentage olarak hesaplanır, UI'da gösterilir: Source A, Source B, Difference, Status."
+                    },
+                    {
+                        id: "7.12",
+                        title: "Source Traceability & Provenance",
+                        description: "As a Billing User, I want to see data lineage so that I know where values came from. AC: Source name, timestamp, raw value, integration ID."
+                    },
+                    {
+                        id: "7.13",
+                        title: "Tolerance Rule Management",
+                        description: "As a Billing Admin, I want to configure tolerances so that harmless differences are ignored. AC: Tolerance Types: Absolute Tolerance ('3 pax fark normal'), Percentage Tolerance ('%5'ten fazla fark risk demek'), Combined Tolerance ('İkisinden biri aşılırsa uyar')."
+                    },
+                    {
+                        id: "7.14",
+                        title: "File Upload Validation",
+                        description: "As a Billing User, I want to upload Excel/CSV so that offline data can be verified. AC: Field mapping, auto compare, dashboard output."
+                    },
+                    {
+                        id: "7.15",
+                        title: "Financial Impact Estimation",
+                        description: "As a Billing Manager, I want to see revenue risk so that priority is clear. AC: Risk = Missing Quantity × Tariff."
+                    }
+                ]
+            },
+            {
+                id: 8,
+                title: "EPIC 8 — Customer Web Portal & Approval Workflow",
+                description: "Provide a customer-facing web portal where services, billing previews, and invoices are reviewed and approved before ERP export, while also managing airline contracts and operational agreements with approval workflows. Amaç: Müşterinin hizmetleri fatura öncesi görmesi, onay mekanizması oluşturulması, sessiz onay (auto-approval) desteği, ERP öncesi final onay kapısı, customer–airline sözleşme doğrulaması, evrak ve belge yönetimi.",
+                stories: [
+                    {
+                        id: "8.1",
+                        title: "Pre-Billing Service Approval (Customer Review)",
+                        description: "As a Customer, I want to review all services provided for my flights so that I can confirm the services before billing. AC: Web portalde müşteri flight/servis bazında invoice preview görür, alanlar gösterilir (Flight No, Date, Service Name, Quantity/Duration, Price, Total Charge), müşteri Accept/Reject/Request clarification seçeneklerine sahip, her aksiyon loglanır, Reject/Clarification durumunda müşteri açıklama girmek zorunda, billing ekibine notification gider."
+                    },
+                    {
+                        id: "8.2",
+                        title: "Automatic Approval After Timeout",
+                        description: "As a Billing System, I want to automatically approve services if customer does not respond within a defined time so that billing is not blocked. AC: Müşteri için approval timeout (örn: 48 saat) konfigüre edilebilir, süre dolduğunda status AUTO-APPROVED olur, auto-approval audit trail'da görünür: 'Approved by system after timeout'."
+                    },
+                    {
+                        id: "8.3",
+                        title: "ERP Pre-Export Invoice Approval",
+                        description: "As a Billing Admin, I want to send final invoice data to customer for last approval before ERP export so that invoicing errors are prevented. AC: Billing tamamlandıktan sonra invoice preview customer portal'e düşer, müşteri final approval verir, ERP export sadece status = APPROVED ise çalışır, final approval (Timestamp, User, IP) kayıt altına alınır."
+                    },
+                    {
+                        id: "8.4",
+                        title: "Approval Workflow Status Tracking",
+                        description: "As a Billing User, I want to track approval statuses so that I know which customers are pending. AC: Durumlar: SENT, VIEWED, APPROVED, AUTO-APPROVED, REJECTED, REVISION REQUIRED, ERP SENT. Dashboard: Customer, Flight/Invoice, Status, Time left, Last action."
+                    },
+                    {
+                        id: "8.5",
+                        title: "Contract & Airline Agreement Declaration (for GH companies)",
+                        description: "As a Ground Handling Company, I want to declare which airlines I am contracted with so that service entitlement is validated. AC: GH customer airline name, contract start/end, scope (services covered) girebilir, Relation: Customer → Airline → Service Types, bilgiler admin onayına düşer."
+                    },
+                    {
+                        id: "8.6",
+                        title: "Contract Verification & Approval Workflow",
+                        description: "As a Billing Admin, I want to review and approve airline contracts uploaded by customers so that operational claims are trusted. AC: Admin Approve/Reject/Request correction seçenekleri, onaylanmadan contract ACTIVE olmaz, red durumunda gerekçe zorunlu."
+                    },
+                    {
+                        id: "8.7",
+                        title: "Document Upload & Evidence Management",
+                        description: "As a Customer, I want to upload supporting documents so that service and billing claims are justified. AC: Yüklenebilir dosyalar (PDF, Contract, SLA, Annex), her doküman Airline/Validity period/Service scope ile etiketlenir, versiyon takibi yapılır."
+                    },
+                    {
+                        id: "8.8",
+                        title: "Approval Audit & History",
+                        description: "As an Auditor, I want to see past approvals so that disputes can be resolved. AC: Approval history (User, Date, Action, Comment), immutable audit log tutulur."
+                    },
+                    {
+                        id: "8.9",
+                        title: "Notification & Reminder System",
+                        description: "As a Billing System, I want to notify customers for pending approvals so that approval delays are minimized. AC: Notification kanalları (Email, Portal notification), reminder (+24 saat, +48 saat), auto-approval öncesi son uyarı gönderilir."
+                    },
+                    {
+                        id: "8.10",
+                        title: "Customer Invoice Archive & Access",
+                        description: "As a Customer, I want to see all previous invoices so that I can track history. AC: Portal past invoices/status/total amount gösterir, PDF export, data immutable."
+                    },
+                    {
+                        id: "8.11",
+                        title: "Flight Locking & Deferred Integration Updates",
+                        description: "As a Billing System, I want to lock the flight when it is sent to customer approval so that no billing data changes during the review process. AC: Flight approval'a gönderildiğinde status LOCKED_FOR_APPROVAL olur, lock sırasında servis eklenemez/silinemez/değiştirilemez, entegrasyon verisi gelirse pending update olarak saklanır, kullanıcı bilgilendirilir, unlock sonrası pending data apply/discard edilebilir, tüm aksiyonlar audit log'a kaydedilir."
+                    }
+                ]
+            },
+            {
+                id: 9,
+                title: "EPIC 9 — Dynamic Tariff Engine",
+                description: "Tarifelerin tamamen konfigürasyonla yönetilebildiği, doğal dil ile kural yazılabilen, versiyonlu ve tarih bazlı çalışan, yayın öncesinde simüle edilen ve onaylanan bir tarife yönetim altyapısı sağlamak. Bu EPIC: Geliştirme ihtiyacını ortadan kaldırır, hatalı tarife yayınını engeller, gelir etkisini yayından önce gösterir.",
+                stories: [
+                    {
+                        id: "9.1",
+                        title: "Versioned & Date-Based Tariff Management",
+                        description: "As a Billing Admin, I want to manage tariff versions with effective dates so that prices change automatically when the date is reached. AC: Tarifeler versiyonludur, geçerlilik tarihi/saati vardır. Aynı tarifenin Draft/Active/Archived durumları bulunur. Sistem tarih/saat geldiğinde eski sürümü devreden çıkarır, yenisini otomatik aktive eder. Geçmiş faturalar eski versiyondan hesaplanmaya devam eder (immutability)."
+                    },
+                    {
+                        id: "9.2",
+                        title: "Natural Language Rule Definition",
+                        description: "As a Billing Admin, I want to define tariff rules in natural language so that I don't need developer support. AC: UI'da 'Natural Language Rule' alanı bulunur. Örnek ifade: '01.03.2026'dan itibaren, 06:00–10:00 arası INTL narrow-body için park ücreti +%8'. Sistem bu ifadeyi makine kuralına çevirir, yapısal formül üretir. Syntax hatası varsa yayına izin verilmez, hata nedeni anlaşılır şekilde gösterilir."
+                    },
+                    {
+                        id: "9.3",
+                        title: "Formula Builder (UI-Based)",
+                        description: "As a Billing Admin, I want to define tariff formulas via UI so that prices can use complex logic. AC: Formülde kullanılabilecek değişkenler: MTOW, Time of day, Noise category, Emission class, Apron/stand type, Pax count, Flight category (INTL/DOM). Formül örnekleri: BaseFee + (MTOW * Factor) + NightSurcharge, IF TimeBand = Night THEN +15%."
+                    },
+                    {
+                        id: "9.4",
+                        title: "Airport-Specific Tariff Profiles",
+                        description: "As a System, I want to support different tariff logic per airport so that each airport runs its own pricing model. AC: Her airport kendi tarife şemasına sahip olabilir. Bir airport başka airport'tan şablon kopyalayabilir. Airport bazlı field seti ve formula yapısı değişebilir."
+                    },
+                    {
+                        id: "9.5",
+                        title: "Real-Time Simulation & Impact Analysis",
+                        description: "As a Billing Admin, I want to simulate tariff changes before publishing so that financial impact is visible. AC: Kullanıcı tarih aralığı seçer. Sistem eski vs yeni tarife ile hesap yapar. Çıktı: Gelir farkı, artış/azalış yüzdesi, en çok etkilenen servisler. Preview mod gerçek faturayı değiştirmez."
+                    },
+                    {
+                        id: "9.6",
+                        title: "Publishing & Approval Workflow",
+                        description: "As a Billing Manager, I want to approve tariff changes before going live so that governance is enforced. AC: Tarife Draft → Pending Approval → Active. Onay olmadan yayınlanamaz. Onay User ve Timestamp ile kaydedilir."
+                    },
+                    {
+                        id: "9.7",
+                        title: "Tariff Preview per Flight",
+                        description: "As a Billing User, I want to preview tariff per flight so that pricing is transparent. AC: Uçuş ekranında kullanılan tarife, versiyonu, hesaplama detayları görünür."
+                    }
+                ]
+            },
+            {
+                id: 10,
+                title: "EPIC 10 — Invoice Correction & Adjustment Management",
+                description: "Provide a complete correction lifecycle where invoice issues are detected by the system or reported by customers, root causes are identified, tariffs are recalculated, and difference-only (adjustment) invoices are generated with full traceability and ERP integration. Amaç: Hatalı faturayı algılamak veya müşteriden almak, kök nedenini tespit etmek, tarife motorunu tekrar çalıştırmak, yeni fatura üretmeden sadece fark faturası kesmek, ERP'ye doğru kayıt göndermek, süreci denetlenebilir hale getirmek.",
+                stories: [
+                    {
+                        id: "10.1",
+                        title: "System-Based Change Detection",
+                        description: "As a Billing System, I want to detect changes that affect invoicing so that incorrect bills are automatically flagged. AC: Değişiklik tetikleyicileri: Flight data update, Service usage change, Tariff update, Campaign update, Retro incentive activation. Sistem ilgili faturayı POTENTIALLY_INCORRECT olarak işaretler."
+                    },
+                    {
+                        id: "10.2",
+                        title: "Root Cause Identification",
+                        description: "As a Billing Analyst, I want to identify the reason for invoicing errors so that corrections are applied accurately. AC: Kök neden tipleri: Service entry error, Tariff misconfiguration, Campaign misfire, External data mismatch, ERP mapping issue."
+                    },
+                    {
+                        id: "10.3",
+                        title: "Controlled Data Correction",
+                        description: "As a Billing Admin, I want to update only faulty fields so that recalculation becomes accurate. AC: Düzeltilebilir alanlar: Flight attributes (PAX, times, aircraft type), Service usage (quantity, duration, equipment), Tariff rules & parameters."
+                    },
+                    {
+                        id: "10.4",
+                        title: "Delta Recalculation Engine",
+                        description: "As a Billing Engine, I want to recalculate only affected services so that the difference is computed. AC: Kullanıcı invoice seçer veya tarih aralığı belirler, sistem sadece etkilenen usage'ları tekrar çalıştırır, orijinal fatura korunur."
+                    },
+                    {
+                        id: "10.5",
+                        title: "Adjustment Usage Creation",
+                        description: "As a Billing System, I want to create adjustment records so that differences are billed correctly. AC: Adjustment positive/negative olabilir, her adjustment orijinal servis ile bağlıdır."
+                    },
+                    {
+                        id: "10.6",
+                        title: "Invoice Mapping & ERP Linkage",
+                        description: "As a Billing System, I want to link adjustments to original invoices so that accounting remains consistent. AC: ERP'ye adjustment ayrı belge gider, original invoice ID referans alınır."
+                    },
+                    {
+                        id: "10.7",
+                        title: "Adjustment Approval Workflow",
+                        description: "As a Billing Manager, I want to approve corrections so that financial control is enforced. AC: Durumlar: Draft, Submitted, Approved, Sent to ERP."
+                    },
+                    {
+                        id: "10.8",
+                        title: "Evidence & Attachment Management",
+                        description: "As a Billing User, I want to attach supporting documents so that adjustments are justified. AC: Dosya türleri: PDF, Excel, image. Her belge adjustment'a bağlanır."
+                    },
+                    {
+                        id: "10.9",
+                        title: "Customer Invoice Dispute via Web Portal",
+                        description: "As a Customer, I want to dispute invoices online so that corrections can be initiated. AC: Invoice ekranında 'Raise Dispute' butonu, müşteri sebep seçer, açıklama yazar, kanıt yükler, status: SUBMITTED."
+                    },
+                    {
+                        id: "10.10",
+                        title: "Dispute Review & Decision",
+                        description: "As a Billing User, I want to handle disputes so that outcomes are controlled. AC: Dispute statüleri: SUBMITTED, UNDER REVIEW, ACCEPTED, REJECTED, ADJUSTMENT CREATED."
+                    },
+                    {
+                        id: "10.11",
+                        title: "Customer Notification & Tracking",
+                        description: "As a Customer, I want to track dispute progress so that I stay informed. AC: Portal durum gösterimi, bildirim: Email / in-app."
+                    },
+                    {
+                        id: "10.12",
+                        title: "Adjustment Trigger After Dispute Resolution",
+                        description: "As a Billing System, I want to create adjustments for approved disputes so that billing is corrected. AC: ACCEPTED → otomatik adjustment oluşturulur."
+                    },
+                    {
+                        id: "10.13",
+                        title: "Audit & Compliance",
+                        description: "As an Auditor, I want to see the full lifecycle so that disputes and adjustments are provable. AC: Audit timeline: Invoice issued, Dispute submitted, Decision, Adjustment, ERP export."
+                    }
+                ]
+            },
+            {
+                id: 11,
+                title: "EPIC 11 — Service Form & Document Generation",
+                description: "Enable dynamic service forms to be generated as PDF per customer for delivered services, with export support on web and mobile, and a flexible form designer to tailor layouts per customer. Amaç: Hizmet verilen uçuş için servis formu üretmek, PDF çıktısı almak, mobil ve web'den dışa aktarmak, müşteri bazlı tasarım yapmak, şablonları konfigürasyonla yönetmek.",
+                stories: [
+                    {
+                        id: "11.1",
+                        title: "Service Form Template Management (Per Customer)",
+                        description: "As a Billing Admin, I want to create form templates per customer so that each customer can have custom layout. AC: Her müşteri için birden fazla template tanımlanabilir, template Active/Draft/Archive durumuna sahiptir, template versiyonludur, uçuşa hangi template uygulanacağı seçilebilir."
+                    },
+                    {
+                        id: "11.2",
+                        title: "Form Designer (Drag & Drop Editor)",
+                        description: "As a Billing Admin, I want to design service forms visually so that no developer work is required. AC: Drag & drop alanlar (Text, Table, Barcode/QR, Logo), data binding (Flight fields, Service fields, Customer fields), önizleme mevcuttur."
+                    },
+                    {
+                        id: "11.3",
+                        title: "Dynamic Field Mapping",
+                        description: "As a System, I want to bind template fields to live data so that PDFs are filled automatically. AC: Alan eşleştirme (Pax count, Service usage, Aircraft reg), hesaplanan alanlar desteklenir, boş alan uyarısı gösterilir."
+                    },
+                    {
+                        id: "11.4",
+                        title: "PDF Generation Engine",
+                        description: "As a System, I want to generate forms as PDF so that documents are immutable. AC: PDF uçuş bazındadır ve servis bazlıdır, watermark opsiyonu vardır, timestamp eklenir."
+                    },
+                    {
+                        id: "11.5",
+                        title: "Export from Web & Mobile",
+                        description: "As a User, I want to export PDFs from web and mobile so that documents are portable. AC: Export Web UI ve Mobile app'ten yapılabilir, dosya email ile gönderilebilir veya download edilir."
+                    },
+                    {
+                        id: "11.6",
+                        title: "Digital Signature & Approval Stamp (Optional)",
+                        description: "As a Billing User, I want to sign service forms digitally so that forms are official. AC: E-signature alanı, signature log tutulur, IP/time kaydı."
+                    },
+                    {
+                        id: "11.7",
+                        title: "Template Preview & Validation",
+                        description: "As a Billing Admin, I want to preview and validate templates so that layouts are correct. AC: Gerçek verilerle test, boş alan listesi, versiyon karşılaştırma."
+                    },
+                    {
+                        id: "11.9",
+                        title: "Form Versioning & History",
+                        description: "As an Auditor, I want to see historical forms so that past documents are provable. AC: Her PDF template version ve tarih kaydıyla saklanır."
+                    },
+                    {
+                        id: "11.10",
+                        title: "Branding & Localization",
+                        description: "As a Billing Admin, I want to customize branding so that customer identity is reflected. AC: Logo, footer, dil seçimi."
+                    }
+                ]
+            },
+            {
+                id: 12,
+                title: "EPIC 12 — ERP Send & Invoice Visibility",
+                description: "Send ready bill lines from CMS to ERP, track ERP processing status, and display ERP-generated invoices in the billing system.",
+                stories: [
+                    {
+                        id: "12.1",
+                        title: "Send Bill Lines to ERP (Manual & Automatic)",
+                        description: "As a Billing User / System, I want to send ready-to-bill line items to ERP manually or automatically so that invoices can be generated in ERP. AC: User can select flight(s) or invoice batch and click Send to ERP, system can automatically send based on configuration, only Approved/Unlocked/Complete bill lines can be sent, result is recorded: SUCCESS/FAILED. Example: TK215 flight is approved and ready, billing user clicks Send to ERP, ERP accepts the payload."
+                    },
+                    {
+                        id: "12.2",
+                        title: "ERP Status Tracking",
+                        description: "As a Billing User, I want to see ERP processing status so that I know what is happening with invoices. AC: Displayed statuses: SENT, INVOICED, REJECTED, status auto-syncs from ERP. Example: ERP creates invoice, CMS shows status = INVOICED."
+                    },
+                    {
+                        id: "12.3",
+                        title: "ERP Invoice Display in CMS",
+                        description: "As a Billing User, I want to view ERP-generated invoices inside CMS so that I do not need to log into ERP. AC: ERP sends invoice number and PDF, CMS displays PDF in viewer and links invoice to bill lines. Example: User opens CMS, clicks ERP Invoice → PDF opens."
+                    }
+                ]
+            },
+            {
+                id: 13,
+                title: "EPIC 13 — Archiving & Data Retention",
+                description: "Store historical billing and operational records securely and allow users to retrieve archived data when needed. Amaç: Eski verilerin sistemden güvenli şekilde arşivlenmesi, performansın korunması, gerektiğinde geçmiş kayıtlara erişim.",
+                stories: [
+                    {
+                        id: "13.1",
+                        title: "Archive Billing Data",
+                        description: "As a System, I want to archive old billing records so that the active system remains fast. AC: Arşivlenebilen veriler: Invoices, Bill lines, Adjustments. Arşivleme tarih bazlı veya manuel yapılabilir."
+                    },
+                    {
+                        id: "13.2",
+                        title: "Archive Retrieval",
+                        description: "As a Billing User, I want to search archived records so that I can access old data. AC: Kullanıcı tarih, customer, invoice no ile arama yapabilir."
+                    },
+                    {
+                        id: "13.3",
+                        title: "Archive Policy & Retention Rules",
+                        description: "As an Admin, I want to configure retention period so that data lifecycle is controlled. AC: Saklama süresi konfigüre edilebilir (ör: 3 yıl, 5 yıl), süre dolunca manuel ya da otomatik silme."
+                    }
+                ]
+            }
+        ];
+
+        // Function to render epics
+        function renderEpics() {
+            const container = document.getElementById('epicsContainer');
+            
+            if (epicsData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h2>Henüz Epic Eklenmedi</h2>
+                        <p>Epics.docx dosyasından epic ve story verilerini ekleyin.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = epicsData.map(epic => `
+                <div class="epic-card" data-epic-id="${epic.id}">
+                    <div class="epic-header">
+                        <div class="epic-title-section">
+                            <div class="epic-number">Epic ${epic.id}</div>
+                            <h2 class="epic-title">${epic.title}</h2>
+                            <p class="epic-description">${epic.description}</p>
+                        </div>
+                        <div class="epic-toggle">▼</div>
+                    </div>
+                    <div class="stories-container">
+                        ${epic.stories.map(story => `
+                            <div class="story-item">
+                                <div class="story-title">
+                                    <span class="story-number">Story ${story.id}</span>
+                                    ${story.title}
+                                </div>
+                                <div class="story-description">${story.description}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            // Add click handlers for epic headers
+            document.querySelectorAll('.epic-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const epicCard = this.closest('.epic-card');
+                    epicCard.classList.toggle('expanded');
+                });
+            });
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.opacity = '1';
+            renderEpics();
+        });
+    </script>
+</body>
+</html>
+
+
